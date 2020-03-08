@@ -1,0 +1,185 @@
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - mood_great
+  - mood_unhappy
+  - bot_challenge
+  - flight
+  - flight_time
+  - airfare
+  - aircraft
+  - ground_service
+  - airport
+  - airline
+  - distance
+  - abbreviation
+  - ground_fare
+  - quantity
+  - city
+  - flight_no
+  - capacity
+  - meal
+  - restriction
+  - cheapest
+  - day_name
+  - airline+flight_no
+  - flight+airfare
+
+entities:
+  - city_name
+  - arrive_time.end_time
+  - arrive_date.today_relative
+  - depart_date.day_name
+  - toloc.airport_name
+  - transport_type
+  - airline_code
+  - depart_date.year
+  - flight_number
+  - fromloc.state_name
+  - toloc.airport_code
+  - arrive_time.start_time
+  - depart_date.month_name
+  - depart_time.period_mod
+  - period_of_day
+  - toloc.city_name
+  - fromloc.airport_name
+  - fromloc.airport_code
+  - economy
+  - meal
+  - depart_date.day_number
+  - aircraft_code
+  - time
+  - state_code
+  - airline_name
+  - flight_time
+  - arrive_date.month_name
+  - mod
+  - depart_date.date_relative
+  - restriction_code
+  - round_trip
+  - class_type
+  - or
+  - state_name
+  - toloc.country_name
+  - fare_basis_code
+  - toloc.state_name
+  - depart_date.today_relative
+  - cost_relative
+  - return_date.day_name
+  - arrive_date.day_number
+  - month_name
+  - flight_stop
+  - return_date.day_number
+  - return_time.period_mod
+  - flight_days
+  - day_name
+  - depart_time.end_time
+  - arrive_time.time
+  - depart_time.time_relative
+  - fromloc.state_code
+  - arrive_time.period_mod
+  - fromloc.city_name
+  - arrive_time.period_of_day
+  - days_code
+  - depart_time.time
+  - stoploc.city_name
+  - stoploc.state_code
+  - flight_mod
+  - return_time.period_of_day
+  - arrive_date.day_name
+  - return_date.date_relative
+  - depart_time.period_of_day
+  - meal_code
+  - depart_time.start_time
+  - meal_description
+  - connect
+  - arrive_time.time_relative
+  - fare_amount
+  - airport_name
+  - return_date.month_name
+  - arrive_date.date_relative
+  - day_number
+  - toloc.state_code
+  - today_relative
+  - airport_code
+
+actions:
+- utter_greet
+- utter_cheer_up
+- utter_did_that_help
+- utter_happy
+- utter_goodbye
+- utter_iamabot
+- utter_flight
+- utter_flight_time
+- utter_airfare
+- utter_aircraft
+- utter_acknowledge_help
+- utter_cancellation
+- utter_confirm
+- utter_booking
+- action_flight_search
+
+slots:
+  fromloc.city_name:
+    type: text
+
+  toloc.city_name:
+    type: text
+
+responses:
+  utter_acknowledge_help:
+  - text: "Did that help you ?"
+
+  utter_cancellation:
+  - text: "Ok cancelling that booking"
+
+  utter_flight+airfare:
+  - text: "Checking all flights and fares for that route and date. Forwarding details to your inbox"
+
+  utter_booking:
+  - text: "Shall I book one of these flights for you"
+
+  utter_confirm:
+  - text: "Ok I have sent the itinerary to your inbox"
+
+  utter_flight:
+  - text: "Checking about available flights for that route and date"
+  - text: "Forwarding details to your inbox"
+
+  utter_flight_time:
+  - text: "Checking the timing for that flight. Details sent to your inbox"
+
+  utter_airfare:
+  - text: "Fare for that route/class sent to your inbox"
+
+  utter_aircraft:
+  - text: "I don't know much about aircrafts at the moment"
+
+  utter_greet:
+  - text: "Hey! How can I help you today? I am FlightBot. I can help with checking available flights for particular dates, getting price quotes for flights etc."
+
+  utter_cheer_up:
+  - text: "Here is something to cheer you up:"
+    image: "https://i.imgur.com/nGF1K8f.jpg"
+
+  utter_did_that_help:
+  - text: "Did that help you?"
+
+  utter_happy:
+  - text: "Great, Glad I could be of help 😀! Let me know if you need help with something else"
+
+  utter_unhappy:
+  - text: "Sorry I couldn't help you with you request. I will direct your query to a human customer agent"
+
+  utter_goodbye:
+  - text: "Bye"
+
+  utter_iamabot:
+  - text: "I am a bot, powered by Rasa."
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
