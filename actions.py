@@ -33,7 +33,7 @@ class ActionFlightSearch(Action):
             'x-rapidapi-host': "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
             'x-rapidapi-key': "5e95a68c99msh96592d58fcb9d95p17319bjsn5bcf6b61e6b5"
             }
-        new_querystring = {"inboundpartialdate":"2020-04-27"}
+        # new_querystring = {"inboundpartialdate":"2020-04-27"}
 
         response = requests.request("GET",
                                     url,
@@ -49,11 +49,18 @@ class ActionFlightSearch(Action):
         json_data2 = json.loads(response2.text)
         arrival_id = json_data2["Places"][0]["PlaceId"]
 
-        new_url = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/IN/INR/en-IN/{}/{}/2020-04-01".format(depart_id,arrival_id)
-        response3 = requests.request("GET", new_url, headers=headers, params=new_querystring)
+        new_url = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/IN/INR/en-IN/{}/{}/2020-09-01".format(depart_id,arrival_id)
+        response3 = requests.request("GET", new_url, headers=headers)
         json_data3 = json.loads(response3.text)
-        price = json_data3["Quotes"][0]["MinPrice"]
+        prices = json_data3["Quotes"]
+        buttons = []
 
-        dispatcher.utter_message(text="Checking about available flights for that route {} to {}. Minimum price for this route is {}".format(flight_source,flight_destination,price))
-
+        if prices:
+            for price in prices:
+                carrier_id = price["OutboundLeg"]["CarrierIds"][0]
+                carrier_name = list(filter(lambda x: x["CarrierId"] == carrier_id, json_data3["Carriers"]))[0]["Name"]
+                buttons.append({"title":"Airline : {}, Price : ₹{}, Departure Time : {} ".format(carrier_name,price["MinPrice"],price["QuoteDateTime"][-8:]),"payload":"/quote{\"quote_id\":\""+str(price["QuoteId"])+"\"}"})
+            dispatcher.utter_message(text="Checking about available flights for that route {} to {}. The following flights are available: ".format(flight_source,flight_destination),buttons=buttons)
+        else:
+            dispatcher.utter_message("No flights available for that route")
         return []

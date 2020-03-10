@@ -5501,6 +5501,7 @@
 - hi
 - good morning
 - good evening
+- good afternoon
 - hey there
 
 ## intent:goodbye
@@ -5515,16 +5516,41 @@
 - of course
 - that sounds good
 - correct
+- yes go ahead
+- ok, confirm that flight
+- yup
+- yeah
+- yes confirm
+- Yeah
+- Alright
+- ok thanks
+- sounds great
+- sounds good to me
+- ok
+- okay
 
 ## intent:deny
 - No. Don't confirm the flight.
+- do not
+- not yet
+- not at the moment
+- not just yet
 - don't
+- nah
+- please don't
 - no thanks
 - do not
+- don't
 - I don't want to confirm right now
 - no
 - never
 - I don't think so
-- don't like that
 - no way
 - not really
+- nope
+
+## intent:quote
+- Option [1](quote_id)
+- Option [2](quote_id)
+- Option [14](quote_id)
+- Option [91](quote_id)

@@ -1,39 +1,3 @@
-<!-- ## flight query
-* flight
-  - utter_flight
-
-## flight time query
-* flight_time
-  - utter_flight_time
-
-## utter_airfare
-* airfare
-  - utter_airfare
-
-## happy path
-* greet
-  - utter_greet
-* mood_great
-  - utter_happy
-
-## sad path 1
-* greet
-  - utter_greet
-* mood_unhappy
-  - utter_cheer_up
-  - utter_did_that_help
-* affirm
-  - utter_happy
-
-## sad path 2
-* greet
-  - utter_greet
-* mood_unhappy
-  - utter_cheer_up
-  - utter_did_that_help
-* deny
-  - utter_goodbye -->
-
 ## say hello
 * greet
   - utter_greet
@@ -47,39 +11,38 @@
 * bot_challenge
   - utter_iamabot
 
-
-## flight booking confirmed
-* greet
-  - utter_greet
+## flight prices search and ask user for affirmation
 * flight
   - action_flight_search
+* quote
   - utter_booking
+>check_price_search
+
+## flight booking confirmed
+>check_greeting
+>check_price_search
 * affirm
   - utter_confirm
   - utter_goodbye
 
 ## flight booking confirmed direct
-* flight
-  - action_flight_search
-  - utter_booking
+>check_price_search
 * affirm
   - utter_confirm
   - utter_goodbye
 
 ## flight booking cancelled
-* greet
-  - utter_greet
+>check_greeting
 * flight
   - action_flight_search
+* quote
   - utter_booking
 * deny
   - utter_cancellation
   - utter_goodbye
 
 ## flight booking cancelled direct
-* flight
-  - action_flight_search
-  - utter_booking
+>check_price_search
 * deny
   - utter_cancellation
   - utter_goodbye
@@ -116,6 +79,17 @@
   - utter_unhappy
   - utter_goodbye
 
+<!-- ## flight time query
+* flight_time
+  - utter_flight_time
+
+## utter_airfare
+* airfare
+  - utter_airfare
+
+## flight query
+* flight
+  - utter_flight
 
 ## flight time query
 * flight_time
@@ -123,4 +97,4 @@
 
 ## utter_airfare
 * airfare
-  - utter_airfare
+  - utter_airfare -->

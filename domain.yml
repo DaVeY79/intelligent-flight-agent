@@ -26,6 +26,7 @@ intents:
   - day_name
   - airline+flight_no
   - flight+airfare
+  - quote
 
 entities:
   - city_name
@@ -104,11 +105,12 @@ entities:
   - toloc.state_code
   - today_relative
   - airport_code
+  - quote_id
 
 actions:
 - utter_greet
 - utter_cheer_up
-- utter_did_that_help
+- utter_other_help
 - utter_happy
 - utter_goodbye
 - utter_iamabot
@@ -129,18 +131,23 @@ slots:
   toloc.city_name:
     type: text
 
+  quote_id:
+    type: float
+    min_value: 1.0
+    max_value: 200.0
+
 responses:
   utter_acknowledge_help:
-  - text: "Did that help you ?"
+  - text: "Did that help you? "
 
   utter_cancellation:
-  - text: "Ok cancelling that booking"
+  - text: "Ok cancelling the booking process."
 
   utter_flight+airfare:
   - text: "Checking all flights and fares for that route and date. Forwarding details to your inbox"
 
   utter_booking:
-  - text: "Shall I book one of these flights for you"
+  - text: "Thanks for selecting {quote_id}. Shall I book that flight for you?"
 
   utter_confirm:
   - text: "Ok I have sent the itinerary to your inbox"
@@ -161,12 +168,8 @@ responses:
   utter_greet:
   - text: "Hey! How can I help you today? I am FlightBot. I can help with checking available flights for particular dates, getting price quotes for flights etc."
 
-  utter_cheer_up:
-  - text: "Here is something to cheer you up:"
-    image: "https://i.imgur.com/nGF1K8f.jpg"
-
-  utter_did_that_help:
-  - text: "Did that help you?"
+  utter_other_help:
+  - text: "Anything else I can help you with. I can help with checking available flights for particular dates, getting price quotes for flights etc."
 
   utter_happy:
   - text: "Great, Glad I could be of help 😀! Let me know if you need help with something else"
