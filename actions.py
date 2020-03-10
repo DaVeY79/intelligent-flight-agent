@@ -27,6 +27,7 @@ class ActionFlightSearch(Action):
 
         flight_source = tracker.get_slot("fromloc.city_name")
         flight_destination = tracker.get_slot("toloc.city_name")
+        departure_datetime = tracker.get_slot("time")
 
         url = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/autosuggest/v1.0/UK/GBP/en-GB/"
         headers = {
@@ -49,7 +50,8 @@ class ActionFlightSearch(Action):
         json_data2 = json.loads(response2.text)
         arrival_id = json_data2["Places"][0]["PlaceId"]
 
-        new_url = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/IN/INR/en-IN/{}/{}/2020-09-01".format(depart_id,arrival_id)
+        #dispatcher.utter_message("Time is : {}".format(departure_time))
+        new_url = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/IN/INR/en-IN/{}/{}/{}".format(depart_id,arrival_id,str(departure_datetime)[:10])
         response3 = requests.request("GET", new_url, headers=headers)
         json_data3 = json.loads(response3.text)
         prices = json_data3["Quotes"]

@@ -4032,6 +4032,7 @@
 - i 'd like to fly from [miami](fromloc.city_name) to [chicago](toloc.city_name) on [american airlines](airline_name)
 - i would like to book a [round trip](round_trip) flight from [kansas city](fromloc.city_name) to [chicago](toloc.city_name)
 - find me a flight that flies from [memphis](fromloc.city_name) to [tacoma](toloc.city_name)
+- - I want to travel from [Pune](fromloc.city_name) to [Goa](toloc.city_name) [tomorrow](depart_date.today_relative).
 
 ## intent:flight_time
 - what is the [arrival time](flight_time) in [san francisco](toloc.city_name) for the [755 am](depart_time.time) flight leaving [washington](fromloc.city_name)

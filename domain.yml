@@ -109,7 +109,6 @@ entities:
 
 actions:
 - utter_greet
-- utter_cheer_up
 - utter_other_help
 - utter_happy
 - utter_goodbye
@@ -136,6 +135,9 @@ slots:
     min_value: 1.0
     max_value: 200.0
 
+  time:
+    type: unfeaturized
+
 responses:
   utter_acknowledge_help:
   - text: "Did that help you? "
@@ -147,7 +149,7 @@ responses:
   - text: "Checking all flights and fares for that route and date. Forwarding details to your inbox"
 
   utter_booking:
-  - text: "Thanks for selecting {quote_id}. Shall I book that flight for you?"
+  - text: "Thanks for selecting {quote_id}. Shall I book that flight on {time} for you?"
 
   utter_confirm:
   - text: "Ok I have sent the itinerary to your inbox"
