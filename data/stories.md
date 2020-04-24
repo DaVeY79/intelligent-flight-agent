@@ -1,7 +1,6 @@
 ## say hello
 * greet
   - utter_greet
->check_greeting
 
 ## say goodbye
 * goodbye
@@ -18,30 +17,14 @@
   - utter_booking
 >check_price_search
 
-## flight booking confirmed
->check_greeting
->check_price_search
-* affirm
-  - utter_confirm
-  - utter_goodbye
 
-## flight booking confirmed direct
+## flight booking confirmed
 >check_price_search
 * affirm
   - utter_confirm
   - utter_goodbye
 
 ## flight booking cancelled
->check_greeting
-* flight
-  - action_flight_search
-* quote
-  - utter_booking
-* deny
-  - utter_cancellation
-  - utter_goodbye
-
-## flight booking cancelled direct
 >check_price_search
 * deny
   - utter_cancellation
@@ -65,16 +48,21 @@
   - utter_unhappy
   - utter_goodbye
 
-## user accepts information is helpful
->check_greeting
->check_info_helpful
+
+## user checks flight time
+* flight_time
+  - action_flight_time
+  - utter_acknowledge_help
+>check_timing_info_helpful
+
+## user accepts timing information is helpful
+>check_timing_info_helpful
 * affirm
   - utter_happy
   - utter_goodbye
 
-## user denies information is helpful
->check_greeting
->check_info_helpful
+## user denies timing information is helpful 
+>check_timing_info_helpful
 * deny
   - utter_unhappy
   - utter_goodbye

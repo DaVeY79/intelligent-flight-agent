@@ -3,8 +3,6 @@ intents:
   - goodbye
   - affirm
   - deny
-  - mood_great
-  - mood_unhappy
   - bot_challenge
   - flight
   - flight_time
@@ -138,6 +136,9 @@ slots:
   time:
     type: unfeaturized
 
+  airline_name:
+    type: text
+
 responses:
   utter_acknowledge_help:
   - text: "Did that help you? "
@@ -168,7 +169,7 @@ responses:
   - text: "I don't know much about aircrafts at the moment"
 
   utter_greet:
-  - text: "Hey! How can I help you today? I am FlightBot. I can help with checking available flights for particular dates, getting price quotes for flights etc."
+  - text: "Hi! I am TravelAgentBot How can I help you today? I can help with checking available flights for particular dates, getting price quotes for flights etc."
 
   utter_other_help:
   - text: "Anything else I can help you with. I can help with checking available flights for particular dates, getting price quotes for flights etc."

@@ -13,8 +13,9 @@ from typing import Any, Text, Dict, List
 
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
-from rasa_sdk.events import SlotSet
-
+from rasa_sdk.events import SlotSet, FollowupAction
+from rasa_sdk.forms import FormAction
+from skyscanner_endpoint import get_place_id, get_routes
 
 class ActionFlightSearch(Action):
 
@@ -29,38 +30,16 @@ class ActionFlightSearch(Action):
         flight_destination = tracker.get_slot("toloc.city_name")
         departure_datetime = tracker.get_slot("time")
 
-        url = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/autosuggest/v1.0/UK/GBP/en-GB/"
-        headers = {
-            'x-rapidapi-host': "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
-            'x-rapidapi-key': "5e95a68c99msh96592d58fcb9d95p17319bjsn5bcf6b61e6b5"
-            }
-        # new_querystring = {"inboundpartialdate":"2020-04-27"}
-
-        response = requests.request("GET",
-                                    url,
-                                    headers=headers,
-                                    params={"query":flight_source})
-        json_data = json.loads(response.text)
-        depart_id = json_data["Places"][0]["PlaceId"]
-
-        response2 = requests.request("GET",
-                                     url,
-                                     headers=headers,
-                                     params={"query":flight_destination})
-        json_data2 = json.loads(response2.text)
-        arrival_id = json_data2["Places"][0]["PlaceId"]
-
-        #dispatcher.utter_message("Time is : {}".format(departure_time))
-        new_url = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/IN/INR/en-IN/{}/{}/{}".format(depart_id,arrival_id,str(departure_datetime)[:10])
-        response3 = requests.request("GET", new_url, headers=headers)
-        json_data3 = json.loads(response3.text)
-        prices = json_data3["Quotes"]
+        depart_id = get_place_id(flight_source)
+        arrival_id = get_place_id(flight_destination)
+        json_data = get_routes(depart_id,arrival_id,str(departure_datetime)[:10])
+        prices = json_data["Quotes"]
         buttons = []
 
         if prices:
             for price in prices:
                 carrier_id = price["OutboundLeg"]["CarrierIds"][0]
-                carrier_name = list(filter(lambda x: x["CarrierId"] == carrier_id, json_data3["Carriers"]))[0]["Name"]
+                carrier_name = list(filter(lambda x: x["CarrierId"] == carrier_id, json_data["Carriers"]))[0]["Name"]
                 buttons.append({"title":"Airline : {}, Price : ₹{}, Departure Time : {} ".format(carrier_name,price["MinPrice"],price["QuoteDateTime"][-8:]),"payload":"/quote{\"quote_id\":\""+str(price["QuoteId"])+"\"}"})
             dispatcher.utter_message(text="Checking about available flights for that route {} to {}. The following flights are available: ".format(flight_source,flight_destination),buttons=buttons)
         else:

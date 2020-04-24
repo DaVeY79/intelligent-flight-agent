@@ -4032,7 +4032,10 @@
 - i 'd like to fly from [miami](fromloc.city_name) to [chicago](toloc.city_name) on [american airlines](airline_name)
 - i would like to book a [round trip](round_trip) flight from [kansas city](fromloc.city_name) to [chicago](toloc.city_name)
 - find me a flight that flies from [memphis](fromloc.city_name) to [tacoma](toloc.city_name)
-- - I want to travel from [Pune](fromloc.city_name) to [Goa](toloc.city_name) [tomorrow](depart_date.today_relative).
+- - I want to travel from [pune](fromloc.city_name) to [goa](toloc.city_name) [tomorrow](depart_date.today_relative).
+- please book me a flight on [Air India](airline_name) on the [31st](depart_date.day_number) of [December](depart_date.month_name) from [Delhi](fromloc.city_name) to [Kabul](toloc.city_name).
+- i need a flight from [morocco](fromloc.city_name) to [lebanon](toloc.city_name) on [22](depart_date.day_number) august.
+- flights from [hamburg](fromloc.city_name) to [lisbon](toloc.city_name) on [April](depart_date.month_name) [7th](depart_date.day_number).
 
 ## intent:flight_time
 - what is the [arrival time](flight_time) in [san francisco](toloc.city_name) for the [755 am](depart_time.time) flight leaving [washington](fromloc.city_name)
@@ -4088,6 +4091,7 @@
 - all right give me the [flight times](flight_time) in the [morning](depart_time.period_of_day) on [september](depart_date.month_name) [twentieth](depart_date.day_number) from [pittsburgh](fromloc.city_name) to [san francisco](toloc.city_name)
 - can you tell me the [time](flight_time) a flight would leave from [atlanta](fromloc.city_name) to [boston](toloc.city_name) in the [afternoon](depart_time.period_of_day)
 - what are the [departure times](flight_time) from [detroit](fromloc.city_name) to [westchester county](toloc.city_name)
+- flight [departure time](flight_time) from [london](fromloc.city_name) to [paris](toloc.city_name) on the [3rd](depart_date.day_number) of [February](depart_date.month_name).
 
 ## intent:airfare
 - [cheapest](cost_relative:cheapest) airfare from [tacoma](fromloc.city_name) to [orlando](toloc.city_name)
@@ -4541,6 +4545,7 @@
 - what is the [lowest](cost_relative) fare from [bwi](fromloc.airport_code) to [salt lake city](toloc.city_name)
 - show me the cost of a [first class](class_type) ticket from [detroit](fromloc.city_name) to [las vegas](toloc.city_name) and [back](round_trip)
 - list the [cheapest](cost_relative) fare from [charlotte](fromloc.city_name) to [las vegas](toloc.city_name)
+- find me the [cheapest](cost_relative:cheapest) flight from [johannesburg](fromloc.city_name) to [abu dhabi](toloc.city_name) [next thursday](depart_date.day_name).
 
 ## intent:aircraft
 - what kind of aircraft is used on a flight from [cleveland](fromloc.city_name) to [dallas](toloc.city_name)
