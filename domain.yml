@@ -1,10 +1,11 @@
 intents:
+  - flight
+  - inform_departure_city
+  - affirm
   - greet
   - goodbye
-  - affirm
   - deny
   - bot_challenge
-  - flight
   - flight_time
   - airfare
   - aircraft
@@ -25,107 +26,111 @@ intents:
   - airline+flight_no
   - flight+airfare
   - quote
+  - inform_arrival_city
+  - inform_departure_date
+  - inform_no_of_adults
+  - inform_no_of_children
+  - inform_no_of_infants
+  - inform_class_type
 
 entities:
-  - city_name
-  - arrive_time.end_time
-  - arrive_date.today_relative
-  - depart_date.day_name
-  - toloc.airport_name
-  - transport_type
-  - airline_code
-  - depart_date.year
-  - flight_number
-  - fromloc.state_name
-  - toloc.airport_code
-  - arrive_time.start_time
-  - depart_date.month_name
-  - depart_time.period_mod
-  - period_of_day
-  - toloc.city_name
-  - fromloc.airport_name
-  - fromloc.airport_code
-  - economy
-  - meal
-  - depart_date.day_number
   - aircraft_code
-  - time
-  - state_code
+  - airline_code
   - airline_name
-  - flight_time
-  - arrive_date.month_name
-  - mod
-  - depart_date.date_relative
-  - restriction_code
-  - round_trip
-  - class_type
-  - or
-  - state_name
-  - toloc.country_name
-  - fare_basis_code
-  - toloc.state_name
-  - depart_date.today_relative
-  - cost_relative
-  - return_date.day_name
+  - airport_code
+  - airport_name
+  - arrive_date.date_relative
+  - arrive_date.day_name
   - arrive_date.day_number
-  - month_name
-  - flight_stop
-  - return_date.day_number
-  - return_time.period_mod
-  - flight_days
-  - day_name
-  - depart_time.end_time
-  - arrive_time.time
-  - depart_time.time_relative
-  - fromloc.state_code
+  - arrive_date.month_name
+  - arrive_date.today_relative
+  - arrive_time.end_time
   - arrive_time.period_mod
-  - fromloc.city_name
   - arrive_time.period_of_day
+  - arrive_time.start_time
+  - arrive_time.time
+  - arrive_time.time_relative
+  - city_name
+  - class_type
+  - connect
+  - cost_relative
+  - day_name
+  - day_number
   - days_code
+  - depart_date.date_relative
+  - depart_date.day_name
+  - depart_date.day_number
+  - depart_date.month_name
+  - depart_date.today_relative
+  - depart_date.year
+  - depart_time.end_time
+  - depart_time.period_mod
+  - depart_time.period_of_day
+  - depart_time.start_time
   - depart_time.time
+  - depart_time.time_relative
+  - economy
+  - fare_amount
+  - fare_basis_code
+  - flight_days
+  - flight_mod
+  - flight_number
+  - flight_stop
+  - flight_time
+  - fromloc.airport_code
+  - fromloc.airport_name
+  - fromloc.city_name
+  - fromloc.country_name
+  - fromloc.state_code
+  - fromloc.state_name
+  - meal
+  - meal_code
+  - meal_description
+  - mod
+  - month_name
+  - or
+  - period_of_day
+  - quote_id
+  - restriction_code
+  - return_date.date_relative
+  - return_date.day_name
+  - return_date.day_number
+  - return_date.month_name
+  - return_date.year
+  - return_time.time
+  - return_time.period_mod
+  - return_time.period_of_day
+  - round_trip
+  - state_code
+  - state_name
   - stoploc.city_name
   - stoploc.state_code
-  - flight_mod
-  - return_time.period_of_day
-  - arrive_date.day_name
-  - return_date.date_relative
-  - depart_time.period_of_day
-  - meal_code
-  - depart_time.start_time
-  - meal_description
-  - connect
-  - arrive_time.time_relative
-  - fare_amount
-  - airport_name
-  - return_date.month_name
-  - arrive_date.date_relative
-  - day_number
-  - toloc.state_code
+  - time
   - today_relative
-  - airport_code
-  - quote_id
-
-actions:
-- utter_greet
-- utter_other_help
-- utter_happy
-- utter_goodbye
-- utter_iamabot
-- utter_flight
-- utter_flight_time
-- utter_airfare
-- utter_aircraft
-- utter_acknowledge_help
-- utter_cancellation
-- utter_confirm
-- utter_booking
-- action_flight_search
+  - toloc.airport_code
+  - toloc.airport_name
+  - toloc.city_name
+  - toloc.country_name
+  - toloc.state_code
+  - toloc.state_name
+  - transport_type
+  - no_of_adults
+  - no_of_children
+  - no_of_infants
+  - currency_code
+  - number
+  - child_passengers
+  - infant_passengers
 
 slots:
+
   fromloc.city_name:
     type: text
 
   toloc.city_name:
+    type: text
+
+  airline_name:
     type: text
 
   quote_id:
@@ -133,59 +138,200 @@ slots:
     min_value: 1.0
     max_value: 200.0
 
+  requested_slot:
+    type: unfeaturized
+
   time:
     type: unfeaturized
 
-  airline_name:
-    type: text
+  no_of_adults:
+    type: float
+    min_value: 1.0
+    max_value: 40.0
+
+  no_of_children:
+    type: float
+    min_value: 0.0
+    max_value: 40.0
+
+  no_of_infants:
+    type: float
+    min_value: 0.0
+    max_value: 10.0
+
+  class_type:
+    type: categorical
+    values:
+    - ECONOMY
+    - PREMIUM_ECONOMY
+    - BUSINESS
+    - FIRST
+
+  currency_code:
+    type: categorical
+    values:
+    - USD
+    - EUR
+    - JPY
+    - GBP
+    - CHF
+    - INR
+
+  child_passengers:
+    type: bool
+
+  infant_passengers:
+    type: bool
+
+forms:
+  - flight_booking_form
+
+actions:
+  - action_end_flight_search
+  - action_flight_search
+  - action_slot_reset
+  - utter_acknowledge_help
+  - utter_aircraft
+  - utter_airfare
+  - utter_ask_fromloc.city_name
+  - utter_ask_time
+  - utter_ask_toloc.city_name
+  - utter_ask_child_passengers
+  - utter_ask_infant_passengers
+  - utter_ask_no_of_adults
+  - utter_ask_no_of_children
+  - utter_ask_no_of_infants
+  - utter_ask_class_type
+  - utter_ask_currency_code
+  - utter_booking
+  - utter_cancellation
+  - utter_confirm
+  - utter_flight
+  - utter_flight+airfare
+  - utter_flight_time
+  - utter_goodbye
+  - utter_greet
+  - utter_happy
+  - utter_iamabot
+  - utter_other_help
+  - utter_unhappy
 
 responses:
   utter_acknowledge_help:
-  - text: "Did that help you? "
-
-  utter_cancellation:
-  - text: "Ok cancelling the booking process."
-
-  utter_flight+airfare:
-  - text: "Checking all flights and fares for that route and date. Forwarding details to your inbox"
-
-  utter_booking:
-  - text: "Thanks for selecting {quote_id}. Shall I book that flight on {time} for you?"
-
-  utter_confirm:
-  - text: "Ok I have sent the itinerary to your inbox"
-
-  utter_flight:
-  - text: "Checking about available flights for that route and date"
-  - text: "Forwarding details to your inbox"
-
-  utter_flight_time:
-  - text: "Checking the timing for that flight. Details sent to your inbox"
-
-  utter_airfare:
-  - text: "Fare for that route/class sent to your inbox"
+  - text: Did that help you?
 
   utter_aircraft:
-  - text: "I don't know much about aircrafts at the moment"
+  - text: I don't know much about aircrafts at the moment
 
-  utter_greet:
-  - text: "Hi! I am TravelAgentBot How can I help you today? I can help with checking available flights for particular dates, getting price quotes for flights etc."
+  utter_airfare:
+  - text: Fare for that route/class sent to your inbox
 
-  utter_other_help:
-  - text: "Anything else I can help you with. I can help with checking available flights for particular dates, getting price quotes for flights etc."
+  utter_ask_fromloc.city_name:
+  - text: Which city are you departing from ?
 
-  utter_happy:
-  - text: "Great, Glad I could be of help 😀! Let me know if you need help with something else"
+  utter_ask_time:
+  - text: On which day would you like to travel ?
 
-  utter_unhappy:
-  - text: "Sorry I couldn't help you with you request. I will direct your query to a human customer agent"
+  utter_ask_toloc.city_name:
+  - text: Which city would you like to travel to ?
+
+  utter_ask_no_of_adults:
+  - text: How many adults are travelling ?
+
+  utter_ask_child_passengers:
+  - text: "Are you travelling with children?"
+
+  utter_ask_infant_passengers:
+  - text: "Are you travelling with infants?"
+
+  utter_ask_no_of_children:
+  - text: How many children are travelling ?
+
+  utter_ask_no_of_infants:
+  - text: How many infants are travelling ?
+
+  utter_ask_class_type:
+  - text: "Choose your class of travel:"
+    buttons:
+      - title: "Economy"
+        payload: '/inform_class_type{"class_type":"ECONOMY"}'
+
+      - title: "Premium Economy"
+        payload: '/inform_class_type{"class_type":"PREMIUM_ECONOMY"}'
+
+      - title: "Business"
+        payload: '/inform_class_type{"class_type":"BUSINESS"}'
+
+      - title: "First"
+        payload: '/inform_class_type{"class_type":"FIRST"}'
+
+  utter_ask_currency_code:
+  - text: "Choose your your payment currency:"
+    buttons:
+      - title: "US Dollar"
+        payload: '/inform_currency_code{"currency_code":"USD"}'
+
+      - title: "Euro"
+        payload: '/inform_currency_code{"currency_code":"EUR"}'
+
+      - title: "Japanese Yen"
+        payload: '/inform_currency_code{"currency_code":"JPY"}'
+
+      - title: "Pound Sterling"
+        payload: '/inform_currency_code{"currency_code":"GBP"}'
+
+      - title: "Swiss Francs"
+        payload: '/inform_currency_code{"currency_code":"CHF"}'
+
+      - title: "Indian Rupee"
+        payload: '/inform_currency_code{"currency_code":"INR"}'
+
+  utter_ask_return_flight:
+  - text: "Do you want to book a one way or round-trip flight ?"
+    buttons:
+      - title: "One Way"
+        payload: '/slot{"return_flight":false}'
+
+      - title: "Round Trip"
+        payload: '/slot{"return_flight":true}'
+
+  utter_booking:
+  - text: Thanks for selecting {quote_id}. Shall I book that flight on {time} for you?
+
+  utter_cancellation:
+  - text: Ok cancelling the booking process.
+
+  utter_confirm:
+  - text: Ok I have sent the itinerary to your inbox
+
+  utter_flight:
+  - text: Checking about available flights for that route and date
+  - text: Forwarding details to your inbox
+
+  utter_flight+airfare:
+  - text: Checking all flights and fares for that route and date. Forwarding details to your inbox
+
+  utter_flight_time:
+  - text: Checking the timing for that flight. Details sent to your inbox
 
   utter_goodbye:
-  - text: "Bye"
+  - text: Bye
+
+  utter_greet:
+  - text: Hi! I am TravelAgentBot How can I help you today? I can help with checking available flights for particular dates, getting price quotes for flights etc.
+
+  utter_happy:
+  - text: Great, Glad I could be of help 😀! Let me know if you need help with something else
 
   utter_iamabot:
-  - text: "I am a bot, powered by Rasa."
+  - text: I am a bot, powered by Rasa.
+
+  utter_other_help:
+  - text: Anything else I can help you with. I can help with checking available flights for particular dates, getting price quotes for flights etc.
+
+  utter_unhappy:
+  - text: Sorry I couldn't help you with you request. I will direct your query to a human customer agent
 
 session_config:
-  session_expiration_time: 60
   carry_over_slots_to_new_session: true
+  session_expiration_time: 60
