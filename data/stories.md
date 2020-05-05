@@ -189,19 +189,20 @@
 * greet
     - utter_greet
     - action_listen
-* flight{"fromloc.city_name": "Amsterdam","toloc.city_name": "Leeds", "depart_date.day_number": "seventh", "depart_date.month_name": "july", "time": "2020-08-12T00:00:00.000+00:00"}
+* flight{"fromloc.city_name": "Amsterdam","toloc.city_name": "Leeds", "depart_date.day_number": "seventh", "depart_date.month_name": "july", "time": "2020-08-12T00:00:00.000+00:00", "depart_date": "2020-08-12T00:00:00.000+00:00"}
     - slot{"fromloc.city_name": "Amsterdam"}
-    - slot{"time": "2020-07-07T00:00:00.000+00:00"}
+    - slot{"depart_date": "2020-08-12T00:00:00.000+00:00"}
     - slot{"toloc.city_name": "Leeds"}
     - flight_booking_form
     - form{"name": "flight_booking_form"}
     - slot{"fromloc.city_name": "Amsterdam"}
-    - slot{"time": "2020-07-07T00:00:00.000+00:00"}
+    - slot{"depart_date": "2020-08-12T00:00:00.000+00:00"}
     - slot{"toloc.city_name": "Leeds"}
     - slot{"requested_slot": "no_of_adults"}
     - utter_ask_no_of_adults
     - action_listen
 * form: inform_no_of_adults{"no_of_adults": "3"}
+    - slot{"no_of_adults":"3"}
     - slot{"requested_slot": "child_passengers"}
     - utter_ask_child_passengers
     - action_listen
@@ -232,9 +233,41 @@
     - action_listen
 * form: inform_currency_code{"currency_code": "EUR"}
     - slot{"currency_code": "EUR"}
+    - form: flight_booking_form
+    - slot{"requested_slot": "round_trip"}
+    - utter_ask_round_trip
+    - action_listen
+* form: inform_round_trip{"round_trip": "round trip"}
+    - slot{"round_trip":"round trip"}
+    - form: flight_booking_form
+    - slot{"requested_slot": "return_date"}
+    - utter_ask_return_date
+    - action_listen
+* form: inform_return_date{"time": "2020-12-30T00:00:00.000+00:00"}
+    - slot{"time":"2020-12-30T00:00:00.000+00:00"}
+    - form: flight_booking_form
+    - slot{"return_date":"2020-12-30T00:00:00.000+00:00"}
+    - form: flight_booking_form
     - form{"name": null}
     - slot{"requested_slot": null}
-* affirm
+    - flight_booking_form
+    - form: flight_booking_form
+    - slot{"fromloc.city_name": "Amsterdam"}
+    - slot{"depart_date": "2020-08-12T00:00:00.000+00:00"}
+    - slot{"toloc.city_name": "Leeds"}
+    - slot{"no_of_adults":"3"}
+    - slot{"child_passengers": true}
+    - slot{"infant_passengers": true}
+    - slot{"no_of_children": "3"}
+    - slot{"no_of_infants": "2"}
+    - slot{"class_type": "PREMIUM_ECONOMY"}
+    - slot{"currency_code": "EUR"}
+    - slot{"round_trip":"round trip"}
+    - slot{"return_date":"2020-12-30T00:00:00.000+00:00"}
+    - form{"name": null}
+    - slot{"requested_slot": null}
+* quote{"quote_id": "4", "number": "4"}
+    - slot{"quote_id": "4"}
     - utter_booking
 * affirm
     - utter_confirm
@@ -247,18 +280,15 @@
 * greet
     - utter_greet
     - action_listen
-* flight{"fromloc.city_name": "Hong Kong", "toloc.city_name": "Madrid", "depart_date.date_relative": "next", "depart_date.day_name": "thursday", "time": "2020-05-07T00:00:00.000+00:00"}
+* flight{"fromloc.city_name": "Hong Kong", "toloc.city_name": "Madrid", "depart_date.date_relative": "next", "depart_date.day_name": "thursday", "time": "2020-05-07T00:00:00.000+00:00","depart_date": "2020-05-07T00:00:00.000+00:00"}
     - slot{"fromloc.city_name": "Hong Kong"}
-    - slot{"time": "2020-05-07T00:00:00.000+00:00"}
+    - slot{"depart_date": "2020-05-07T00:00:00.000+00:00"}
     - slot{"toloc.city_name": "Madrid"}
     - flight_booking_form
     - form{"name": "flight_booking_form"}
     - slot{"fromloc.city_name": "Hong Kong"}
     - slot{"toloc.city_name": "Madrid"}
-    - slot{"time": "2020-05-07T00:00:00.000+00:00"}
-    - slot{"fromloc.city_name": "Hong Kong"}
-    - slot{"toloc.city_name": "Madrid"}
-    - slot{"time": "2020-05-07T00:00:00.000+00:00"}
+    - slot{"depart_date": "2020-05-07T00:00:00.000+00:00"}
     - slot{"requested_slot": "no_of_adults"}
     - utter_ask_no_of_adults
     - action_listen
@@ -304,9 +334,41 @@
     - action_listen
 * form: inform_currency_code{"currency_code": "USD"}
     - slot{"currency_code": "USD"}
+    - form: flight_booking_form
+    - slot{"requested_slot": "round_trip"}
+    - utter_ask_round_trip
+    - action_listen
+* form: inform_round_trip{"round_trip": "round trip"}
+    - slot{"round_trip":"round trip"}
+    - form: flight_booking_form
+    - slot{"requested_slot": "return_date"}
+    - utter_ask_return_date
+    - action_listen
+* form: inform_round_trip{"time": "2020-07-07T00:00:00.000+00:00"}
+    - slot{"time":"2020-07-07T00:00:00.000+00:00"}
+    - form: flight_booking_form
+    - slot{"return_date":"2020-07-07T00:00:00.000+00:00"}
+    - form: flight_booking_form
     - form{"name": null}
     - slot{"requested_slot": null}
-* affirm
+    - flight_booking_form
+    - form: flight_booking_form
+    - slot{"fromloc.city_name": "Hong Kong"}
+    - slot{"toloc.city_name": "Madrid"}
+    - slot{"depart_date": "2020-05-07T00:00:00.000+00:00"}
+    - slot{"no_of_adults": "3"}
+    - slot{"child_passengers": true}
+    - slot{"infant_passengers": true}
+    - slot{"no_of_children": "3"}
+    - slot{"no_of_infants": "2"}
+    - slot{"class_type": "BUSINESS"}
+    - slot{"currency_code": "USD"}
+    - slot{"round_trip":"round trip"}
+    - slot{"return_date":"2020-07-07T00:00:00.000+00:00"}
+    - form{"name": null}
+    - slot{"requested_slot": null}
+* quote{"quote_id": "2", "number": "2"}
+    - slot{"quote_id": "2"}
     - utter_booking
 * affirm
     - utter_confirm
@@ -363,13 +425,21 @@
     - form: flight_booking_form
     - slot{"requested_slot": "class_type"}
     - utter_ask_class_type
+    - action_listen
 * form: inform_class_type{"class_type": "ECONOMY"}
     - slot{"class_type": "ECONOMY"}
     - flight_booking_form
     - slot{"requested_slot": "currency_code"}
     - utter_ask_currency_code
+    - action_listen
 * form: inform_currency_code{"currency_code": "INR"}
     - slot{"currency_code": "INR"}
+    - flight_booking_form
+    - slot{"requested_slot": "round_trip"}
+    - utter_ask_round_trip
+    - action_listen
+* form: inform_round_trip{"round_trip": "one way"}
+    - slot{"round_trip":"one way"}
     - flight_booking_form
     - form{"name": null}
     - slot{"requested_slot": null}

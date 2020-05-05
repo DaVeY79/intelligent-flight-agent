@@ -5619,27 +5619,27 @@
 - [next](depart_date.date_relative) [wednesday](depart_date.day_name)
 
 ## intent:inform_return_date
-- I will be returning on the [thirteenth](return_date.day_number) of [may](return_date.month_name)
-- I want to return on [15](return_date.day_number) [July](return_date.month_name)
-- I would like to return on [15th](return_date.day_number) [October](return_date.month_name)
-- Would like to return on the [15th](return_date.day_number) of [March](return_date.month_name)
-- I will be travelling back on [5th](return_date.month_name) [January](return_date.month_name)
-- want to return on [19th](return_date.day_number) [May](return_date.month_name) [2021](return_date.year)
-- want to fly back [this](return_date.date_relative) coming [friday](return_date.day_name)
-- [next](return_date.date_relative) [sunday](return_date.day_name) [evening](return_time.period_of_day) [8pm](return_time.time)
-- [this](return_date.date_relative) [thursday](return_date.day_name) [afternoon](return_time.period_of_day) [2 o'clock](return_time.time)
-- want to go back on [twenty fifth](return_date.day_number) [august](return_date.month_name)
-- please book my return flight for [november](return_date.month_name) [30](return_date.day_number)
-- book my return flight for [December](return_date.month_name) [29th](return_date.day_number) [2020](return_date.year)
-- that would be on [june](return_date.month_name) [twenty second](return_date.day_number) [10 am](return_time.time)
-- On the [21st](return_date.day_number) of [September](return_date.month_name)
-- [27th](return_date.day_number) [September](return_date.month_name)
-- [9](return_date.day_number) [October](return_date.month_name)
-- [nineteenth](return_date.day_number) [august](return_date.month_name)
-- [january](return_date.month_name) [thirty first](return_date.day_number)
-- [december](return_date.month_name) [30th](return_date.day_number)
-- [tomorrow](return_time.today_relative) [morning](return_time.period_of_day) [9am](return_time.time)
-- [day after tomorrow](return_time.today_relative) [12 pm](return_time.time)
+- I will be [returning](round_trip) to [Dublin](toloc.city_name), [Ireland](toloc.country_name) on the [thirteenth](return_date.day_number) of [may](return_date.month_name)
+- I want to [return](round_trip) on [15](return_date.day_number) [July](return_date.month_name)
+- I would like to [return](round_trip) to [Belfast](toloc.city_name) on [15th](return_date.day_number) [October](return_date.month_name)
+- Would like to [return](round_trip) on the [15th](return_date.day_number) of [March](return_date.month_name)
+- I will be travelling [back](round_trip) on [5th](return_date.month_name) [January](return_date.month_name)
+- want to [return](round_trip) on [19th](return_date.day_number) [May](return_date.month_name) [2021](return_date.year)
+- want to fly [back](round_trip) to [Siem Reap](toloc.city_name) [this](return_date.date_relative) coming [friday](return_date.day_name)
+- [return](round_trip) to [Detroit](toloc.city_name) [next](return_date.date_relative) [sunday](return_date.day_name) [evening](return_time.period_of_day) [8pm](return_time.time)
+- I want to [return](round_trip) [this](return_date.date_relative) [thursday](return_date.day_name) [afternoon](return_time.period_of_day) [2 o'clock](return_time.time)
+- want to go [back](round_trip)  on [twenty fifth](return_date.day_number) [august](return_date.month_name)
+- please book my [return](round_trip)  flight for [november](return_date.month_name) [30](return_date.day_number)
+- book my [return](round_trip)  flight for [December](return_date.month_name) [29th](return_date.day_number) [2020](return_date.year)
+- date of [return](round_trip) would be [june](return_date.month_name) [twenty second](return_date.day_number) [10 am](return_time.time)
+- [return](round_trip) on the [21st](return_date.day_number) of [September](return_date.month_name)
+- [return](round_trip) on [27th](return_date.day_number) [September](return_date.month_name)
+- [return](round_trip) on [9](return_date.day_number) [October](return_date.month_name)
+- [return](round_trip) on [nineteenth](return_date.day_number) [august](return_date.month_name)
+- [return](round_trip) on [january](return_date.month_name) [thirty first](return_date.day_number)
+- [return](round_trip) on [december](return_date.month_name) [30th](return_date.day_number)
+- [return](round_trip) [tomorrow](return_time.today_relative) [morning](return_time.period_of_day) [9am](return_time.time)
+- [return](round_trip) [day after tomorrow](return_time.today_relative) [12 pm](return_time.time)
 
 ## intent:inform_no_of_adults
 - There are [3](no_of_adults) adults travelling.
@@ -5704,6 +5704,29 @@
 - want to pay in [us dollars](currency_code:USD)
 - want to pay in [indian rupees](currency_code:INR)
 
+## intent: inform_round_trip
+- I would like to book a [round trip](round_trip)
+- [round trip](round_trip) flight please !!
+- [round trip](round_trip) journey
+- yes I want to book a [round trip](round_trip)
+- [one way](round_trip) flight
+- [one way](round_trip) journey
+- with [return](round_trip) flight
+- yes I would like to book a ticket [back](round_trip)
+- would like to book a flight [back](round_trip)
+- I want a [return](round_trip) flight as well
+- would like a [return](round_trip) flight
+- would like to book [both ways](round_trip)
+- [one way](round_trip) only please
+- just [one way](round_trip)
+- [one way](round_trip)
+- [round trip](round_trip)
+- [round trips](round_trip)
+- [return](round_trip) flight
+- [one-way](round_trip)
+- [1 way](round_trip)
+
+
 ## synonym:BUSINESS
 - business class
 - business
@@ -5752,3 +5775,20 @@
 
 ## synonym:sunday 's
 - sunday's
+
+
+## synonym:round trip
+- round trips
+- back
+- return
+- both ways
+- returning
+- round-trip
+
+## synonym:one way
+- one-way
+- 1 way
+
+
+
+

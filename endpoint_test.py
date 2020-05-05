@@ -142,3 +142,142 @@ else:
 #                 flight_source, flight_destination), buttons=buttons)
 #
 #         return []
+
+
+# [
+#     {"body":"on 8th September","start":22,"value":
+#         {"values":[
+#                     {"value":"2020-09-08T00:00:00.000-07:00","grain":"day","type":"value"},
+#                     {"value":"2021-09-08T00:00:00.000-07:00","grain":"day","type":"value"},
+#                     {"value":"2022-09-08T00:00:00.000-07:00","grain":"day","type":"value"}
+#                   ],
+#          "value":"2020-09-08T00:00:00.000-07:00","grain":"day","type":"value"
+#         },
+#          "end":38,"dim":"time","latent":False
+#     },
+#
+#     {"body":"on 18th November","start":50,"value":
+#         {"values":[
+#                     {"value":"2020-11-18T00:00:00.000-08:00","grain":"day","type":"value"},
+#                     {"value":"2021-11-18T00:00:00.000-08:00","grain":"day","type":"value"},
+#                     {"value":"2022-11-18T00:00:00.000-08:00","grain":"day","type":"value"}
+#                   ],
+#         "value":"2020-11-18T00:00:00.000-08:00","grain":"day","type":"value"
+#         }
+#     }
+# ]
+
+
+# {
+#     "intent": {
+#         "name": "inform_return_date",
+#         "confidence": 0.9012346267700195
+#     },
+#     "entities": [
+#         {
+#             "start": 20,
+#             "end": 24,
+#             "value": "13th",
+#             "entity": "return_date.day_number",
+#             "confidence": 0.5734733990198869,
+#             "extractor": "CRFEntityExtractor"
+#         },
+#         {
+#             "start": 25,
+#             "end": 32,
+#             "value": "October",
+#             "entity": "return_date.month_name",
+#             "confidence": 0.442162783340129,
+#             "extractor": "CRFEntityExtractor"
+#         },
+#         {
+#             "start": 37,
+#             "end": 43,
+#             "value": "round trip",
+#             "entity": "round_trip",
+#             "confidence": 0.7409239509044201,
+#             "extractor": "CRFEntityExtractor",
+#             "processors": [
+#                 "EntitySynonymMapper"
+#             ]
+#         },
+#         {
+#             "start": 47,
+#             "end": 51,
+#             "value": "19th",
+#             "entity": "return_date.day_number",
+#             "confidence": 0.907452509781391,
+#             "extractor": "CRFEntityExtractor"
+#         },
+#         {
+#             "start": 52,
+#             "end": 60,
+#             "value": "November",
+#             "entity": "return_date.month_name",
+#             "confidence": 0.8947719418357718,
+#             "extractor": "CRFEntityExtractor"
+#         },
+#         {
+#             "start": 17,
+#             "end": 32,
+#             "text": "on 13th October",
+#             "value": "2020-10-13T00:00:00.000+00:00",
+#             "confidence": 1.0,
+#             "additional_info": {
+#                 "values": [
+#                     {
+#                         "value": "2020-10-13T00:00:00.000+00:00",
+#                         "grain": "day",
+#                         "type": "value"
+#                     },
+#                     {
+#                         "value": "2021-10-13T00:00:00.000+00:00",
+#                         "grain": "day",
+#                         "type": "value"
+#                     },
+#                     {
+#                         "value": "2022-10-13T00:00:00.000+00:00",
+#                         "grain": "day",
+#                         "type": "value"
+#                     }
+#                 ],
+#                 "value": "2020-10-13T00:00:00.000+00:00",
+#                 "grain": "day",
+#                 "type": "value"
+#             },
+#             "entity": "time",
+#             "extractor": "DucklingHTTPExtractor"
+#         },
+#         {
+#             "start": 44,
+#             "end": 60,
+#             "text": "on 19th November",
+#             "value": "2020-11-19T00:00:00.000+00:00",
+#             "confidence": 1.0,
+#             "additional_info": {
+#                 "values": [
+#                     {
+#                         "value": "2020-11-19T00:00:00.000+00:00",
+#                         "grain": "day",
+#                         "type": "value"
+#                     },
+#                     {
+#                         "value": "2021-11-19T00:00:00.000+00:00",
+#                         "grain": "day",
+#                         "type": "value"
+#                     },
+#                     {
+#                         "value": "2022-11-19T00:00:00.000+00:00",
+#                         "grain": "day",
+#                         "type": "value"
+#                     }
+#                 ],
+#                 "value": "2020-11-19T00:00:00.000+00:00",
+#                 "grain": "day",
+#                 "type": "value"
+#             },
+#             "entity": "time",
+#             "extractor": "DucklingHTTPExtractor"
+#         }
+#     ]
+# }

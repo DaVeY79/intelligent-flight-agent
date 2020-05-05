@@ -32,6 +32,9 @@ intents:
   - inform_no_of_children
   - inform_no_of_infants
   - inform_class_type
+  - inform_currency_code
+  - inform_round_trip
+  - inform_return_date
 
 entities:
   - aircraft_code
@@ -121,6 +124,8 @@ entities:
   - number
   - child_passengers
   - infant_passengers
+  - depart_date
+  - return_date
 
 slots:
 
@@ -143,6 +148,12 @@ slots:
 
   time:
     type: unfeaturized
+
+  depart_date:
+    type: text
+  
+  return_date:
+    type: text
 
   no_of_adults:
     type: float
@@ -183,6 +194,12 @@ slots:
   infant_passengers:
     type: bool
 
+  round_trip:
+    type: categorical
+    values:
+    - round trip
+    - one way
+
 forms:
   - flight_booking_form
 
@@ -194,7 +211,7 @@ actions:
   - utter_aircraft
   - utter_airfare
   - utter_ask_fromloc.city_name
-  - utter_ask_time
+  - utter_ask_depart_date
   - utter_ask_toloc.city_name
   - utter_ask_child_passengers
   - utter_ask_infant_passengers
@@ -203,6 +220,8 @@ actions:
   - utter_ask_no_of_infants
   - utter_ask_class_type
   - utter_ask_currency_code
+  - utter_ask_round_trip
+  - utter_ask_return_date
   - utter_booking
   - utter_cancellation
   - utter_confirm
@@ -229,7 +248,7 @@ responses:
   utter_ask_fromloc.city_name:
   - text: Which city are you departing from ?
 
-  utter_ask_time:
+  utter_ask_depart_date:
   - text: On which day would you like to travel ?
 
   utter_ask_toloc.city_name:
@@ -286,14 +305,17 @@ responses:
       - title: "Indian Rupee"
         payload: '/inform_currency_code{"currency_code":"INR"}'
 
-  utter_ask_return_flight:
+  utter_ask_round_trip:
   - text: "Do you want to book a one way or round-trip flight ?"
     buttons:
       - title: "One Way"
-        payload: '/slot{"return_flight":false}'
+        payload: '/inform_round_trip{"round_trip":"one way"}'
 
       - title: "Round Trip"
-        payload: '/slot{"return_flight":true}'
+        payload: '/inform_round_trip{"round_trip":"round trip"}'
+  
+  utter_ask_return_date:
+  - text: "On what day would you like to return ?"
 
   utter_booking:
   - text: Thanks for selecting {quote_id}. Shall I book that flight on {time} for you?
