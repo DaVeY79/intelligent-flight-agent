@@ -35,6 +35,12 @@ intents:
   - inform_currency_code
   - inform_round_trip
   - inform_return_date
+  - inform_email_id
+  - inform_user_name
+  - inform_mobile_no
+  - inform_country_code
+  - inform_title
+  - inform_pnr
 
 entities:
   - aircraft_code
@@ -126,6 +132,12 @@ entities:
   - infant_passengers
   - depart_date
   - return_date
+  - flight_stop_check
+  - email_id
+  - user_name
+  - title
+  - country_code
+  - pnr
 
 slots:
 
@@ -151,7 +163,7 @@ slots:
 
   depart_date:
     type: text
-  
+
   return_date:
     type: text
 
@@ -194,19 +206,73 @@ slots:
   infant_passengers:
     type: bool
 
+  flight_stop_check:
+    type: text
+
   round_trip:
     type: categorical
     values:
     - round trip
     - one way
 
+  flight_time:
+    type: categorical
+    values:
+    - flight time
+    - departure time
+    - arrival time
+
+  flight_mod:
+    type: categorical
+    values:
+    - cheap
+    - early
+    - last
+    - weekday
+    - earliest arriving
+    - arriving
+
+  flight_number:
+    type: float
+    min_value: 0.0
+    max_value: 9999.0
+
+  aircraft_code:
+    type: text
+
+  user_name:
+    type: text
+
+  email_id:
+    type: text
+
+  title:
+    type: categorical
+    values:
+    - Mr
+    - Ms
+    - Mx
+    - Dr
+
+  mobile_no:
+    type: float
+
+  country_code:
+    type: float
+
+  pnr:
+    type: text
+
 forms:
   - flight_booking_form
+  - flight_time_form
+  - retrieve_booking_info_form
 
 actions:
   - action_end_flight_search
   - action_flight_search
   - action_slot_reset
+  - action_booking_confirmation
   - utter_acknowledge_help
   - utter_aircraft
   - utter_airfare
@@ -222,6 +288,13 @@ actions:
   - utter_ask_currency_code
   - utter_ask_round_trip
   - utter_ask_return_date
+  - utter_ask_flight_stop_check
+  - utter_ask_email_id
+  - utter_ask_mobile_no
+  - utter_ask_country_code
+  - utter_ask_user_name
+  - utter_ask_title
+  - utter_ask_pnr
   - utter_booking
   - utter_cancellation
   - utter_confirm
@@ -313,18 +386,54 @@ responses:
 
       - title: "Round Trip"
         payload: '/inform_round_trip{"round_trip":"round trip"}'
-  
+
   utter_ask_return_date:
   - text: "On what day would you like to return ?"
 
+  utter_ask_flight_stop_check:
+  - text: "Do you want a nonstop flight ?"
+
+  utter_ask_email_id:
+  - text: "Please provide an email id to send the booking details to "
+
+  utter_ask_mobile_no:
+  - text: "Please provide a mobile number to send the booking details to "
+
+  utter_ask_country_code:
+  - text: "Please provide the country code for your mobile number "
+
+  utter_ask_title:
+  - text: "Please select a title by which you may be referred ?"
+    buttons:
+      - title: "Mister or Master (Mr.)"
+        payload: '/inform_title{"title":"Mr"}'
+
+      - title: "Miss or Missus (Ms.)"
+        payload: '/inform_title{"title":"Ms"}'
+
+      - title: "Gender Neutral (Mx.)"
+        payload: '/inform_title{"title":"Mx"}'
+
+      - title: "Doctor (Dr.)"
+        payload: '/inform_title{"title":"Dr"}'
+
+  utter_ask_user_name:
+  - text: "Please provide your full name "
+
+  utter_ask_pnr:
+  - text: "Please provide your pnr for me to retrieve your booking details"
+
+  utter_wait_pnr:
+  - text: "Please give me a second..retrieving booking details for the booking reference you have provided. "
+
   utter_booking:
-  - text: Thanks for selecting {quote_id}. Shall I book that flight on {time} for you?
+  - text: Thanks for selecting {quote_id} {title} {user_name}. Shall I book that flight on {time} for you?
 
   utter_cancellation:
   - text: Ok cancelling the booking process.
 
   utter_confirm:
-  - text: Ok I have sent the itinerary to your inbox
+  - text: Ok {title} {user_name} I have sent the itinerary to your inbox. Thanks for booking with us.
 
   utter_flight:
   - text: Checking about available flights for that route and date

@@ -25,7 +25,7 @@
 - i 'd like to arrange a flight from [pittsburgh](fromloc.city_name) to [atlanta](toloc.city_name)
 - show flights from [baltimore](fromloc.city_name) to [san francisco](toloc.city_name) between [6 pm](depart_time.start_time) and [8 pm](depart_time.end_time) on [friday](depart_date.day_name)
 - i would like a list of [round trip](round_trip) flights between [indianapolis](fromloc.city_name) and [orlando](toloc.city_name) [florida](toloc.state_name) for the [twenty seventh](depart_date.day_number) and the [twenty eighth](depart_date.day_number) of [december](depart_date.month_name)
-- [pittsburg](fromloc.city_name:pittsburgh) to [denver](toloc.city_name)
+- [pittsburgh](fromloc.city_name:pittsburgh) to [denver](toloc.city_name)
 - show me all flights from [boston](fromloc.city_name) to [dallas fort worth](toloc.city_name) both direct and connecting that arrive [before](arrive_time.time_relative) [noon](arrive_time.time)
 - i need a flight from [charlotte](fromloc.city_name) to [newark](toloc.city_name) leaving [today](depart_date.today_relative) [evening](depart_time.period_of_day)
 - flights from [newark](fromloc.city_name) to [cleveland](toloc.city_name)
@@ -2738,7 +2738,7 @@
 - show me the flights from [san francisco](fromloc.city_name) to [dallas](toloc.city_name)
 - [round trip](round_trip) [houston](fromloc.city_name) to [las vegas](toloc.city_name) [nonstop](flight_stop)
 - show flights from [denver](fromloc.city_name) into [san francisco](toloc.city_name)
-- [sunday's](depart_date.day_name:sunday 's) flights between [tampa](fromloc.city_name) and [charlotte](toloc.city_name)
+- [sunday's](depart_date.day_name) flights between [tampa](fromloc.city_name) and [charlotte](toloc.city_name)
 - list all flights from [chicago](fromloc.city_name) to [seattle](toloc.city_name) on [continental](airline_name) which depart on [saturday](depart_date.day_name) and serve [meals](meal)
 - list all flights leaving [denver](fromloc.city_name) arriving in [seattle](toloc.city_name) on [saturday](arrive_date.day_name) that depart [after](depart_time.time_relative) [1230 pm](depart_time.time)
 - how do you get from the airport to downtown [dallas](toloc.city_name) please
@@ -3107,7 +3107,7 @@
 - show me the [nonstop](flight_stop) flights from [houston](fromloc.city_name) to [dallas](toloc.city_name)
 - show me the flights from [salt lake city](fromloc.city_name) to [st. petersburg](toloc.city_name) on [wednesday](depart_date.day_name)
 - i would like a flight from [toronto](fromloc.city_name) to [san diego](toloc.city_name) that stops in [kansas city](stoploc.city_name)
-- is [twa](airline_code) flight [497766](flight_number) from [st. petersburg](fromloc.city_name) to [milwaukee](toloc.city_name) with [one stop](flight_stop) available [tomorrow](depart_date.today_relative) [morning](depart_time.period_of_day)
+- is [twa](airline_code) flight [4976](flight_number) from [st. petersburg](fromloc.city_name) to [milwaukee](toloc.city_name) with [one stop](flight_stop) available [tomorrow](depart_date.today_relative) [morning](depart_time.period_of_day)
 - please list [united](airline_name) flights between [boston](fromloc.city_name) and [denver](toloc.city_name) departing at [9 am](depart_time.time)
 - show me the flights from [cleveland](fromloc.city_name) to [memphis](toloc.city_name)
 - what [american airlines](airline_name) flights from [phoenix](fromloc.city_name) to [milwaukee](toloc.city_name) depart [phoenix](fromloc.city_name) [after](depart_time.time_relative) [6 pm](depart_time.time) on [wednesday](depart_date.day_name)
@@ -3190,7 +3190,7 @@
 - what is the [latest](flight_mod) flight departing from [boston](fromloc.city_name) to [san francisco](toloc.city_name)
 - please show me flights from [denver](fromloc.city_name) to [san francisco](toloc.city_name) on [wednesday](depart_date.day_name) [after](depart_time.time_relative) [1300 hours](depart_time.time)
 - i want a flight from [denver](fromloc.city_name) to [atlanta](toloc.city_name)
-- i would like to know if i fly on [american](airline_name) flight [number](flight_number) 813 from [boston](fromloc.city_name) to [oakland](toloc.city_name) if i will stop enroute at another city
+- i would like to know if i fly on [american](airline_name) flight number [813](flight_number) from [boston](fromloc.city_name) to [oakland](toloc.city_name) if i will stop enroute at another city
 - i need a flight from [atlanta](fromloc.city_name) to [philadelphia](toloc.city_name) and i 'm looking for the [cheapest](cost_relative) fare
 - i 'd like to know what flights [united airline](airline_name) has from [dallas](fromloc.city_name) to [san francisco](toloc.city_name)
 - show flights between [philadelphia](fromloc.city_name) and [denver](toloc.city_name) on [september](depart_date.month_name) [sixteenth](depart_date.day_number)
@@ -3209,7 +3209,7 @@
 - what flights leave [phoenix](fromloc.city_name) on [wednesday](depart_date.day_name) [evening](depart_time.period_of_day) and arrive in [milwaukee](toloc.city_name)
 - please show me the flights from [washington](fromloc.city_name) to [san francisco](toloc.city_name)
 - what flights from [san jose](fromloc.city_name) to [dallas](toloc.city_name) on [friday](depart_date.day_name) [afternoon](depart_time.period_of_day)
-- [friday's](depart_date.day_name:friday 's) flights between [newark](fromloc.city_name) and [tampa](toloc.city_name)
+- [friday's](depart_date.day_name) flights between [newark](fromloc.city_name) and [tampa](toloc.city_name)
 - what flights leave from [newark](fromloc.city_name) to [los angeles](toloc.city_name) in the [afternoon](depart_time.period_of_day)
 - which [united](airline_name) flights from [boston](fromloc.city_name) to [san francisco](toloc.city_name) make [connections](connect)
 - yes i need a flight from [denver](fromloc.city_name) to [pittsburgh](toloc.city_name) on [july](depart_date.month_name) [seventh](depart_date.day_number)
@@ -4038,13 +4038,15 @@
 - flights from [hamburg](fromloc.city_name) to [lisbon](toloc.city_name) on [April](depart_date.month_name) [7th](depart_date.day_number).
 - I want to fly to [Delhi](toloc.city_name)
 - I want to travel to [Chennai](toloc.city_name) on the [25th](depart_date.day_number) of [August](depart_date.month_name)
-- I want to travel to [Chennai](toloc.city_name) on the [12th](depart_date.day_number) of [August](depart_date.month_name)
 - I want to travel from [Paris](fromloc.city_name)
 - I would like to travel to [London](toloc.city_name), [UK](toloc.country_name)
 - I want to travel from [Amsterdam](fromloc.city_name) to [Leeds](toloc.city_name) on [july](depart_date.month_name) [seventh](depart_date.day_number)
 - I want to travel from [Hong Kong](fromloc.city_name) to [Madrid](toloc.city_name) [next](depart_date.date_relative) [thursday](depart_date.day_name)
 - I want to travel to [Dubai](toloc.city_name) on [October](depart_date.month_name) [5th](depart_date.day_number)
-- from [Bangalore](fromloc.city_name)
+- I want to travel from [Sydney](fromloc.city_name) to [Auckland](toloc.city_name)
+- I want to travel from [Mumbai](fromloc.city_name) to [Sydney](toloc.city_name) on [august](depart_date.month_name) [3rd](depart_date.day_number)
+- I want to fly from [Bangalore](fromloc.city_name) to [Frankfurt](toloc.city_name) on the [28th](depart_date.day_number) of [November](depart_date.month_name)
+- I want to travel from [Bangalore](fromloc.city_name) to [Dubai](toloc.city_name)
 
 ## intent:flight_time
 - what is the [arrival time](flight_time) in [san francisco](toloc.city_name) for the [755 am](depart_time.time) flight leaving [washington](fromloc.city_name)
@@ -5399,7 +5401,7 @@
 - may i have a listing of flight numbers from [columbus](fromloc.city_name) [ohio](fromloc.state_name) to [minneapolis](toloc.city_name) [minnesota](toloc.state_name) on [monday](depart_date.day_name)
 - list the number of flights arriving in [dallas fort worth](toloc.city_name) from [boston](fromloc.city_name) [before](arrive_time.time_relative) [noon](arrive_time.time)
 - i would like the flight number and the [time](flight_time) for the [cheapest](cost_relative) fare that is the [least expensive](cost_relative) [first class](class_type) fare from [san francisco](fromloc.city_name) to [pittsburgh](toloc.city_name) leaving [after](depart_time.time_relative) [8 pm](depart_time.time) [monday](depart_date.day_name) [night](depart_time.period_of_day)
-- which is the flight number for the [us air](airline_name) flight from [philadelphia](fromloc.city_name) to [boston](toloc.city_name) is it [279](flight_number) [or](or) is it [137338](flight_number)
+- which is the flight number for the [us air](airline_name) flight from [philadelphia](fromloc.city_name) to [boston](toloc.city_name) is it [279](flight_number) [or](or) is it [1378](flight_number)
 - what is the flight number of the [earliest](flight_mod) flight between [boston](fromloc.city_name) and [washington](toloc.city_name) [dc](toloc.state_code)
 - what are the flight numbers of the flights which go from [san francisco](fromloc.city_name) to [washington](toloc.city_name) via [indianapolis](stoploc.city_name)
 - i need flight numbers for those flights departing on [thursday](depart_date.day_name) [before](depart_time.time_relative) [8 am](depart_time.time) from [oakland](fromloc.city_name) going to [salt lake city](toloc.city_name)
@@ -5489,7 +5491,7 @@
 - do i get a [meal](meal) on the [atlanta](fromloc.city_name) to [bwi](toloc.airport_code) flight [eastern](airline_name) [210](flight_number)
 - what types of [meals](meal) are available
 - what [meals](meal) are served on [american](airline_name) flight [811](flight_number) from [tampa](fromloc.city_name) to [milwaukee](toloc.city_name)
-- what [meals](meal) are served on [american](airline_name) flight [665 673](flight_number) from [milwaukee](fromloc.city_name) to [seattle](toloc.city_name)
+- what [meals](meal) are served on [american](airline_name) flight [665](flight_number) from [milwaukee](fromloc.city_name) to [seattle](toloc.city_name)
 - what [meals](meal) are available on [dl](airline_code) [468](flight_number) which al arrives in [san francisco](toloc.city_name) at [950 am](arrive_time.time)
 - what [meals](meal) are there on flight [382](flight_number) from [milwaukee](fromloc.city_name) to [washington](toloc.city_name) [dc](toloc.state_code) on [tuesday](depart_date.day_name) [morning](depart_time.period_of_day)
 - are [meals](meal) ever served on [tower air](airline_name)
@@ -5518,6 +5520,7 @@
 - good evening
 - good afternoon
 - hey there
+- [Mr](title).
 
 ## intent:goodbye
 - bye
@@ -5550,6 +5553,7 @@
 - Yes please do
 - Yes confirm that flight
 - Yes, please go ahead
+- Yes please
 
 ## intent:deny
 - No. Don't confirm the flight.
@@ -5568,6 +5572,8 @@
 - no way
 - not really
 - nope
+- No
+- No i am not
 
 ## intent:quote
 - Option [1](quote_id)
@@ -5575,6 +5581,7 @@
 - Option [14](quote_id)
 - Option [91](quote_id)
 - [5](quote_id)[](number:5)
+- Option [3](quote_id)
 
 ## intent:inform_departure_city
 - I am travelling from [New Delhi](fromloc.city_name)
@@ -5617,6 +5624,11 @@
 - [fourteenth](depart_date.day_number) [october](depart_date.month_name) [2021](depart_date.year)
 - On the [21st](depart_date.day_number) of [September](depart_date.month_name)
 - [next](depart_date.date_relative) [wednesday](depart_date.day_name)
+- want to fly on [November](depart_date.month_name) [nineteenth](depart_date.day_number) [2019](depart_date.year)
+- want to travel on [November](depart_date.month_name) [19th](depart_date.day_number) [2020](depart_date.year)
+- want to travel on [august](depart_date.month_name) [3rd](depart_date.day_number)
+- would like to leave on [November](depart_date.month_name) [28th](depart_date.day_number)
+- want to travel on [October](depart_date.month_name) [5th](depart_date.day_number)
 
 ## intent:inform_return_date
 - I will be [returning](round_trip) to [Dublin](toloc.city_name), [Ireland](toloc.country_name) on the [thirteenth](return_date.day_number) of [may](return_date.month_name)
@@ -5640,6 +5652,10 @@
 - [return](round_trip) on [december](return_date.month_name) [30th](return_date.day_number)
 - [return](round_trip) [tomorrow](return_time.today_relative) [morning](return_time.period_of_day) [9am](return_time.time)
 - [return](round_trip) [day after tomorrow](return_time.today_relative) [12 pm](return_time.time)
+- I would like to [return](round_trip:round trip) on October 13th[](return_date.month_name:October)[](return_date.day_number:13th)
+- I would like to [return](round_trip:round trip) on January 11th 2021[](return_date.month_name:January)[](return_date.day_number:11th)[](return_date.year:2021)
+- I want to [return](round_trip:round trip) on November 25th 2020[](return_date.month_name:November)[](return_date.day_number:25th)[](return_date.year:2020)
+- would like to [return](round_trip:round trip) on December 16th[](return_date.month_name:December)[](return_date.day_number:16th)
 
 ## intent:inform_no_of_adults
 - There are [3](no_of_adults) adults travelling.
@@ -5647,7 +5663,6 @@
 - [five](no_of_adults) adults
 - [four](no_of_adults) of us will be flying
 - we're travelling as a group of [six](no_of_adults)
-- [3](no_of_adults) adults
 - [3](no_of_adults) adults
 
 ## intent:inform_no_of_children
@@ -5666,7 +5681,7 @@
 - I have [4](no_of_children) kids with me
 - I have [thirty](no_of_children) school children with me
 - [3](no_of_children) children
-- [3](no_of_children) children
+- [2](no_of_children) children
 
 ## intent:inform_no_of_infants
 - We have [two](no_of_infants) infants travelling with us
@@ -5677,7 +5692,6 @@
 - [one](no_of_infants) infant
 - [four](no_of_infants) infants
 - [2](no_of_infants) infants
-- [1](no_of_infants) infant
 
 ## intent:inform_class_type
 - I would like to travel [first](class_type:FIRST) on this flight
@@ -5704,7 +5718,7 @@
 - want to pay in [us dollars](currency_code:USD)
 - want to pay in [indian rupees](currency_code:INR)
 
-## intent: inform_round_trip
+## intent:inform_round_trip
 - I would like to book a [round trip](round_trip)
 - [round trip](round_trip) flight please !!
 - [round trip](round_trip) journey
@@ -5726,6 +5740,188 @@
 - [one-way](round_trip)
 - [1 way](round_trip)
 
+## intent:inform_email_id
+- My email id is [coolkidsz47@gmail.com](email_id)
+- mail id is [hellworld@aol.com](email_id)
+- mail address is [ded1234@devin.me](email_id)
+- email address is [holly@sgconsulting.in](email_id)
+- email is [david@purdue.edu](email_id)
+- email is [davey@gmail.com](email_id)
+- [davey2005@yahoo.com](email_id)
+- my email address is [david@daveabraham.me](email_id)
+
+## intent:inform_user_name
+- my name is [Adams Baker Davis](user_name)
+- name is [Holly Henderson](user_name)
+- my name is [Larry K Peters](user_name)
+- my name is [Michael O'Malley](user_name)
+- the name is [Hobert Brouillette](user_name)
+- My name is [Bruce W Kaspersky](user_name)
+- My name is [Lisa Kudrow](user_name)
+- my name is [Ada María Guerrero Pérez](user_name)
+- full name is [Blake Snider](user_name)
+- I am [Norman Mcray](user_name)
+- It’s [Nakesha Scoggins](user_name)
+- I’m [Lucy Hawking](user_name)
+- Call me [Sally H. Littman](user_name)
+- [Stan Lee](user_name) is my name
+- I am [Ganesh Ramesh Purohit](user_name)
+- Please call me [Mary Elizabeth Smith](user_name)
+- name is [J. Edgar Hoover](user_name)
+- my full name is [Li Xiao Ping](user_name)
+- call me [Monika Prakash Rao](user_name)
+- My name is [Lien Gisler](user_name)
+
+## intent:inform_mobile_no
+- my mobile number is [8750345979](mobile_no)
+- my mobile number is (+[1](country_code))[5673619683](mobile_no)
+- [7739345979](mobile_no)
+- [9155543516](mobile_no)
+- mobile no is [9989345979](mobile_no)
+- no is [9989345979](mobile_no)
+- number is +[91](country_code)[6465335473](mobile_no)
+- my mobile number is [7870364730](mobile_no)
+- cell phone number is [9455553947](mobile_no)
+- my cell phone is [7990364730](mobile_no)
+- my cell number is [9255576273](mobile_no)
+- that would be [9555583640](mobile_no)
+- the number is [7555385413](mobile_no)
+- that number is [6465335473](mobile_no)
+- phone number is +[91](country_code)[7555003321](mobile_no)
+- +[91](country_code)[7555385082](mobile_no)
+- +[973](country_code)[3940970038](mobile_no)
+
+## intent:inform_country_code
+- country code is +[ 1 2 4 2 ](country_code)
+- country code is +[91](country_code)
+- +[65](country_code)
+- +[971](country_code)
+- +[ 2 9 7 ](country_code)
+- +[61](country_code)
+- country code is +[33](country_code)
+- the code is +[1](country_code)
+- country code is +[31](country_code)
+- country code is +[852](country_code)
+- code is +[973](country_code)
+
+## intent:inform_title
+- my title is [Mr](title)
+- title is [Mr](title)
+- title is [Ms](title)
+- please refer to me as [Mx](title)
+- the title is [Dr](title)
+- you can refer to me as [Mister](title:Mr)
+- please refer to me as [Mrs](title:Ms)
+- i would appreciate if you call me [Doctor](title:Dr)
+- kindly call me [Mr](title)
+
+## intent:inform_pnr
+- My pnr is [PNRc3c2](pnr). Give me my booking details.
+- Can you please retrieve my most recent booking, my pnr is [PNRe3ac](pnr)
+- Show me my latest booking, my pnr is [PNR59a6](pnr)
+- Please get me my current booking, pnr is [PNR2195](pnr)
+- Show my current booking, pnr is [PNR213e](pnr)
+- Display reservation with pnr is [PNRf13e](pnr)
+- Please display booking with pnr is [PNRl18e](pnr)
+- Could you please show me my booking, my pnr is [PNRe3ac](pnr)
+- Show me my booking, with pnr [PNRe3ac](pnr)
+- my pnr is [PNR](pnr) please give me my booking information
+- my pnr is [PNR4b7d](pnr) please give me my travel itinerary
+- please give me my booking details
+- my pnr is [PNR5a7d](pnr)
+
+## synonym: after
+- afterwards
+- later
+
+## synonym: afternoon
+- afternoons
+- noon
+- late afternoon
+
+## synonym: approximately
+- about
+- around
+- near
+- close
+- vicinity
+
+## synonym: arrival time
+- arrival times
+- time of arrival
+- arrival timings
+
+## synonym: before
+- earlier
+- prior to
+
+## synonym: by
+- no later than
+
+## synonym: cheap
+- inexpensive
+- cheapest
+
+## synonym: departure time
+- departure times
+- time of departure
+- departure timings
+
+## synonym: early
+- earliest possible time
+- earliest
+- next
+
+## synonym: flight time
+- time
+- schedule
+- flight schedules
+- times
+- flight schedule
+- times of your flights
+- times of flight
+- flight times
+- flight timings
+- schedule for flights
+- when
+
+## synonym: last
+- lastest
+- latest time possible
+- late
+- overnight
+- red eye
+- last
+- latest
+
+## synonym: morning
+- mornings
+
+## synonym: night
+- nights
+- midnight
+- nighttime
+- dinnertime
+
+## synonym: nonstop
+- non-stop
+- nonstop
+- without stopping
+- directly
+- nonstops
+- no stops
+
+## synonym: stop
+- maximum number of stops
+- stops
+- one stop
+- stopovers
+
+## synonym: weekday
+- weekdays
+- during the week
+- only weekdays
+- during week days
 
 ## synonym:BUSINESS
 - business class
@@ -5733,6 +5929,9 @@
 
 ## synonym:CHF
 - swiss francs
+
+## synonym:Dr
+- Doctor
 
 ## synonym:ECONOMY
 - coach
@@ -5751,6 +5950,8 @@
 
 ## synonym:GBP
 - pounds
+- pound sterling
+- great british pound
 
 ## synonym:INR
 - rupees
@@ -5760,35 +5961,59 @@
 - yen
 - japanese yen
 
+## synonym:Mr
+- Mister
+
+## synonym:Ms
+- Mrs
+
 ## synonym:PREMIUM_ECONOMY
 - premium economy
 
 ## synonym:USD
 - dollars
 - us dollars
-
-## synonym:friday 's
-- friday's
-
-## synonym:pittsburgh
-- pittsburg
-
-## synonym:sunday 's
-- sunday's
-
-
-## synonym:round trip
-- round trips
-- back
-- return
-- both ways
-- returning
-- round-trip
+- american dollars
+- american dollar
 
 ## synonym:one way
 - one-way
 - 1 way
 
+## synonym:round trip
+- return
+- round trips
+- back
+- both ways
+- returning
+- round-trip
 
+## regex:email_id
+- ^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
 
+## regex:mobile_no
+- \b[6-9]\d{9}\b
 
+## regex:pnr
+- ^PNR\w{4}$
+
+## regex:aircraft_code
+- (?=\b.{3,5}\b)\b[a-zA-Z]{0,2}[1-9]\d{0,3}[a-z]?\b
+
+## regex:country_code:
+- (?:\+)\d{1,5}\b
+
+## regex:flight_number
+- \s\b\d{2,4}\b
+
+## lookup:user_name
+- data/test/lookup_tables/names.txt
+
+## lookup:airport_code
+- data/test/lookup_tables/airport_codes.txt
+
+## lookup:airline_code
+- data/test/lookup_tables/airline_codes.txt
+
+## lookup:country_code:
+- data/test/lookup_tables/country_codes.txt

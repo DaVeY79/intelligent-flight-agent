@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+  <title></title>
+
+  <style>
+    .flight {
+      position: absolute;
+      left: 40%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .duration {
+      position: absolute;
+      right: 40%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .outbound {
+      margin-top: 50px;
+    }
+
+    .inbound {
+      margin-top: 50px;
+    }
+
+    .flight_icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .name_icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .email_icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .mobile_icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .clock_icon {
+      width: 30px;
+      height: 30px;
+    }
+
+    .clock_icon {
+      width: 30px;
+      height: 30px;
+    }
+
+    .passenger_details {
+      margin-top: 70px;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div style="text-align: center;">
+    <div>
+      <p>Hi {{{passenger_name}}} your booking offer is confirmed</p>
+      <p> Your {{outbound.source_place}} - {{outbound.destination_place}} return flight is confirmed. </p>
+      <p> Your Passenger Name Record(PNR) is {{pnr}}. Baggage allowance is {{baggage_allowance}}</p>
+      <p><strong> Just booked.</strong></p>
+      <div class="outbound">
+        <p>{{airline_name}} {{airline_iata}} {{outbound.flight_no}}</p><br><br>
+        <div class="flight-duration">
+          <div class="flight">
+            <p> <img src="https://static.thenounproject.com/png/59879-200.png" alt="" class="flight_icon"> {{outbound.source_place}}</p>
+            <p> <img src="https://static.thenounproject.com/png/59877-200.png" alt="" class="flight_icon"> {{outbound.destination_place}}</p>
+            <p>{{outbound.depart_date}}</p>
+          </div>
+          <div class="duration">
+            <p><img src="https://cdn4.vectorstock.com/i/1000x1000/83/93/thin-line-clock-icon-vector-17698393.jpg" alt="" class="clock_icon">{{outbound.depart_time}} — {{outbound.arrive_time}}</p>
+            <p>{{outbound.flight_duration}}, {{outbound.no_of_stops}} stops</p>
+          </div>
+        </div>
+      </div>
+      <br><br><br>
+
+      <div class="inbound">
+        <p>{{airline_name}} {{airline_iata}} {{inbound.flight_no}}</p><br><br>
+        <div class="flight-duration">
+          <div class="flight">
+            <p> <img src="https://static.thenounproject.com/png/59879-200.png" alt="" class="flight_icon"> {{inbound.source_place}}</p>
+            <p> <img src="https://static.thenounproject.com/png/59877-200.png" alt="" class="flight_icon"> {{inbound.destination_place}}</p>
+            <p>{{inbound.depart_date}}</p>
+          </div>
+          <div class="duration">
+            <p><img src="https://cdn4.vectorstock.com/i/1000x1000/83/93/thin-line-clock-icon-vector-17698393.jpg" alt="" class="clock_icon">{{inbound.depart_time}} — {{inbound.arrive_time}}</p>
+            <p>{{inbound.flight_duration}}, {{inbound.no_of_stops}} stops</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="passenger_details">
+        <p>Traveller Details: </p><br>
+        <table style="margin-left:20%;margin-right:auto;">
+          <tr>
+            <td style="width:90px"><img src="https://cdn2.iconfinder.com/data/icons/people-80/96/Picture1-512.png" alt="" class="name_icon"></td>
+            <td style="width:90px"> {{{passenger_name}}}</td>
+          </tr>
+          <tr>
+            <td style="width:90px"><img src="https://cdn0.iconfinder.com/data/icons/ui-for-commercial/32/email_mail_gmail-512.png" alt="" class="email_icon"></td>
+            <td style="width:100px"><a href="mailto:" id="emailid">{{email_id}}</a></td>
+          </tr>
+          <tr>
+            <td><img src="https://cdn2.iconfinder.com/data/icons/font-awesome/1792/phone-512.png" alt="" class="mobile_icon"></td>
+            <td style="width:90px">+{{country_code}} {{mobile_no}}</td>
+          </tr>
+        </table>
+      </div>
+
+      <div style="margin-top: 70px; width: 40%; height: 40%;margin-left:25%;margin-right:auto;">
+        <div>
+          <table class="table table-striped table-bordered">
+            <tr class="active">
+              <th colspan="2" style="text-align:center">Fare Breakup</th>
+            </tr>
+            <tr>
+              <td>Base fare</td>
+              <td>{{base_fare}}</td>
+            </tr>
+            <tr>
+              <td>Supplier fee</td>
+              <td>{{supplier_fee}}</td>
+            </tr>
+            <tr>
+              <td>Ticketing fee</td>
+              <td>{{ticketing_fee}}</td>
+            </tr>
+            <tr>
+              <td>Form of payment</td>
+              <td>{{form_of_payment_fee}}</td>
+            </tr>
+            <tr>
+              <td>Total taxes</td>
+              <td>{{tax}}</td>
+            </tr>
+            <tr>
+              <td><strong>Total cost</strong></td>
+              <td><strong>{{total}}</strong></td>
+            </tr>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

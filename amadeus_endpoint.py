@@ -1,30 +1,64 @@
 from amadeus import Client, ResponseError
-from iata_mapping import get_city_name, get_city_iata
+from datetime import datetime
+from iata_mapping import get_city_name, get_city_iata, get_airline_name
 import re
+import calendar
+import logging
+from sqlalchemy import create_engine, MetaData, Table, insert, select
+import mysql.connector
+import uuid
+import json
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail, Email
+from python_http_client.exceptions import HTTPError
+import os
+
+
+# logger = logging.getLogger('your_logger')
+# logger.setLevel(logging.DEBUG)
 
 amadeus = Client(
     client_id='6QQLRW6rZxxWehfqpoPXEOfkq2e6wCeB',
-    client_secret='bMQBEJK4y65keE5z')
+    client_secret='bMQBEJK4y65keE5z'
+    # logger=logger
+)
+
+currency_code_mapping = {"USD": ["US Dollars","$"], "EUR": ["Euros","€"], "JPY": ["Japanese Yen","¥"], "GBP": ["Pound Sterling","£"], "CHF": ["Swiss Francs","₣"],
+                         "INR": ["Indian Rupees","₹"], "AUD": ["Australian Dollars","Aus$"], "CAD": ["Canadian Dollars","Can$"], "CNY": ["Chinese Yuan Renminbi","￥"]}
+
 
 class AmadeusFlight:
-    def __init__(self,originLocation, destinationLocation, departureDate, returnDate=None, adults=1, children=0, infants=0, travelClass=None, includedAirlineCodes=None, maxPrice=None, currencyCode="INR", nonStop="false",max=5):
+    def __init__(self, originLocation, destinationLocation, departureDate, returnDate=None, adults=1, children=0, infants=0, travelClass=None,
+                 includedAirlineCodes=None, maxPrice=None, flightmod=None, flight_time=None, email_id=None, mobile_no=None, country_code=None,
+                 title=None, user_name=None, currencyCode="INR", nonStop="false", max=5):
+
         self.originLocationCode = get_city_iata(originLocation)
         self.destinationLocationCode = get_city_iata(destinationLocation)
         self.departureDate = departureDate
         self.adults = adults
+        self.children = children
+        self.infants = infants
+        self.currencyCode = currencyCode
+        self.travelClass = travelClass
+        self.title = title
+        self.user_name = user_name
+        self.email_id = email_id
+        self.mobile_no = mobile_no
+        self.country_code = country_code
+        self.return_date = returnDate
 
         params = {}
         params["originLocationCode"] = self.originLocationCode
         params["destinationLocationCode"] = self.destinationLocationCode
-        params["departureDate"] = self.departureDate
+        params["departureDate"] = departureDate
         params["adults"] = adults
         params["children"] = children
         params["infants"] = infants
-        #params["nonStop"] = nonStop
+        params["nonStop"] = nonStop
         params["currencyCode"] = currencyCode
         params["max"] = max
 
-        if returnDate:
+        if self.return_date:
             params["returnDate"] = returnDate
 
         if travelClass:
@@ -42,47 +76,350 @@ class AmadeusFlight:
             self.res = response.data
         except ResponseError as error:
             raise Exception("No flights available for that route")
+        else:
+            self.engine = create_engine("mysql+mysqlconnector://root:Trivi@01@127.0.0.1:3306/flightinfodb", encoding="utf-8", echo = False)
+            metadata = MetaData()
+            self.bookings = Table("bookings",metadata,autoload=True,autoload_with=self.engine)
 
-    def generate_flight_prices(self):
+    def generate_flight_quotes(self):
         for data in self.res:
-            for itinerary in data["itineraries"]:
+            itinerary_out = ""
+            for itinerary_no, itinerary in enumerate(data["itineraries"]):
+                segment_fare_details = list(
+                    filter(lambda x: x['travelerType'] == 'ADULT', data['travelerPricings']))[0]
+                baggage_allowance = segment_fare_details['fareDetailsBySegment'][-1]['includedCheckedBags']
+                baggage_allowance_str = str(baggage_allowance["weight"]) + \
+                    baggage_allowance["weightUnit"]
+                stops_str = self.stops_format(itinerary["segments"])
                 departure = itinerary["segments"][0]["departure"]
                 departure_place = get_city_name(departure["iataCode"])
-                departure_datetime = departure["at"].split("T")
-                departure_date = departure_datetime[0]
-                departure_time = departure_datetime[1]
-                try:
-                    departure_terminal = departure["terminal"]
-                except KeyError:
-                    departure_terminal = ""
+                departure_date, departure_time = self.datetime_format(
+                    departure["at"])
+                departure_terminal = "(Terminal: {})".format(
+                    departure.get("terminal")).replace("(Terminal: None)", "")
                 arrival = itinerary["segments"][-1]["arrival"]
                 arrival_place = get_city_name(arrival["iataCode"])
-                arrival_datetime = arrival["at"].split("T")
-                arrival_date = arrival_datetime[0]
-                arrival_time = arrival_datetime[1]
-                try:
-                    arrival_terminal = arrival["terminal"]
-                except KeyError as e:
-                    arrival_terminal = ""
+                arrival_date, arrival_time = self.datetime_format(
+                    arrival["at"])
+                arrival_terminal = "(Terminal: {})".format(
+                    arrival.get("terminal")).replace("(Terminal: None)", "")
                 airline_iata_code = itinerary["segments"][0]["carrierCode"]
                 # airline_name = get_airline_name(airline_iata_code)
-                airline_name = amadeus.reference_data.airlines.get(airlineCodes=airline_iata_code).data[0]["commonName"]
-                flight_duration = re.split(r"[PT,H,M]", itinerary["segments"][0]["duration"])
-                hours = flight_duration[2]
-                minutes = flight_duration[3]
-                output = "{} flight Departure from {},{} {} at {} --->  Arrival in {},{} {} at {}.".format(airline_name, departure_place, "Terminal: " + departure_terminal if departure_terminal != "" else "", departure_date,
-                                                                                                                departure_time, arrival_place, "Terminal: " + arrival_terminal if arrival_terminal != "" else "", arrival_date, arrival_time)
-                output = output + " Duration: {} hours and {} minutes".format(
-                    hours, minutes) if minutes != '' else output + " Duration: {} hours".format(hours)
+                airline_name = amadeus.reference_data.airlines.get(
+                    airlineCodes=airline_iata_code).data[0]["businessName"].title()
+                flight_duration = self.duration_format(itinerary["duration"])
+                price = data["price"]
+                total_cost = currency_code_mapping.get(price["currency"])[1]+price["grandTotal"]
+                if itinerary_no%2 == 0:
+                    trip_leg = "Outbound journey: "
+                else:
+                    trip_leg = "Inbound journey: "
+                output = "{} {} Departure from {}{} on {} at {} --->  Arrival in {}{} on {} at {}. {}. {}. Cost: {}. Baggage Allowance : {}.\n".format(trip_leg, airline_name, departure_place, departure_terminal, departure_date,
+                                                                                                                                                    departure_time, arrival_place, arrival_terminal, arrival_date, arrival_time, flight_duration, stops_str, total_cost, baggage_allowance_str)
+                itinerary_out += output
 
-                yield output
+            yield itinerary_out
 
-# a = AmadeusFlight(originLocation="Bangalore",destinationLocation="Dubai",departureDate="2020-10-05",adults=3,children=3,infants=2,travelClass="ECONOMY",currencyCode="INR")
-# gfp = iter(a.generate_flight_prices())
+    def confirm_pricing(self, quote_id):
+        self.confirm_offer = amadeus.shopping.flight_offers.pricing.post(
+            self.res[quote_id - 1])
 
+    def generate_flight_timings_weekday(self):
+        for data in self.res:
+            for itinerary_no, itinerary in enumerate(data["itineraries"]):
+                stops_str = self.stops_format(itinerary["segments"])
+                departure = itinerary["segments"][0]["departure"]
+                departure_place = get_city_name(departure["iataCode"])
+                departure_date, departure_time = self.datetime_format(departure["at"])
+                departure_terminal = "(Terminal: {})".format(departure.get("terminal")).replace("(Terminal: None)", "")
+                arrival = itinerary["segments"][-1]["arrival"]
+                arrival_place = get_city_name(arrival["iataCode"])
+                arrival_date, arrival_time = self.datetime_format(arrival["at"])
+                arrival_terminal = "(Terminal: {})".format(arrival.get("terminal")).replace("(Terminal: None)", "")
+                airline_iata_code = itinerary["segments"][0]["carrierCode"]
+                airline_name = amadeus.reference_data.airlines.get(airlineCodes=airline_iata_code).data[0]["businessName"].title()
+                flight_duration = self.duration_format(itinerary["duration"])
+
+                if itinerary_no%2 == 1:
+                    trip_leg = "Outbound journey: "
+                else:
+                    trip_leg = "Inbound journey: "
+
+                output = self.flight_time_format(trip_leg, airline_name, departure_place, departure_terminal, departure_date,
+                                                 departure_time, arrival_place, arrival_terminal, arrival_date, arrival_time, flight_duration, stops_str)
+
+                if datetime.strptime(departure_time, "%I:%M %p").weekday() < 5:
+                    yield output
+
+    def generate_flight_timings_relative(self):
+        timings = []
+        for data in self.res:
+            for itinerary_no, itinerary in enumerate(data["itineraries"]):
+                stops_str = self.stops_format(itinerary["segments"], segment_fare_details)
+                departure = itinerary["segments"][0]["departure"]
+                departure_place = get_city_name(departure["iataCode"])
+                departure_date, departure_time = self.datetime_format(departure["at"])
+                departure_terminal = "(Terminal: {})".format(departure.get("terminal")).replace("(Terminal: None)", "")
+                arrival = itinerary["segments"][-1]["arrival"]
+                arrival_place = get_city_name(arrival["iataCode"])
+                arrival_date, arrival_time = self.datetime_format(arrival["at"])
+                arrival_terminal = "(Terminal: {})".format(arrival.get("terminal")).replace("(Terminal: None)", "")
+                airline_iata_code = itinerary["segments"][0]["carrierCode"]
+                airline_name = amadeus.reference_data.airlines.get(airlineCodes=airline_iata_code).data[0]["businessName"].title()
+                flight_duration = self.duration_format(itinerary["duration"])
+
+                if itinerary_no%2 == 1:
+                    trip_leg = "Outbound journey: "
+                else:
+                    trip_leg = "Inbound journey: "
+
+                output = self.flight_time_format(trip_leg, airline_name, departure_place, departure_terminal, departure_date,
+                                                 departure_time, arrival_place, arrival_terminal, arrival_date, arrival_time, flight_duration, stops_str)
+
+                timings.append((output, datetime.strptime(departure_time, "%I:%M %p"), datetime.strptime(arrival_time, "%I:%M %p")))
+
+        if self.flight_mod == "early":
+            output = min(timings, key=lambda x: x[1])
+            yield output[0]
+
+        elif self.flight_mod == "last":
+            output = max(timings, key=lambda x: x[1])
+            yield output[0]
+
+        elif self.flight_mod == "earliest arriving":
+            output = min(timings, key=lambda x: x[2])
+            yield output[0]
+
+    def flight_time_format(self, trip_leg, airline_name, departure_place, departure_terminal, departure_date,
+                           departure_time, arrival_place, arrival_terminal, arrival_date, arrival_time, flight_duration, stops_str):
+
+        if self.flight_time == "flight time":
+            return "{} {} Departure from {}{} on {} at {} --->  Arrival in {}{} on {} at {}. {}. {}".format(trip_leg, airline_name, departure_place, departure_terminal, departure_date, departure_time, arrival_place, arrival_terminal, arrival_date, arrival_time, flight_duration, stops_str)
+
+        elif self.flight_time == "departure time":
+            return "{} {} Departure from {}{} on {} at {}. {}. {}".format(trip_leg, airline_name, departure_place, departure_terminal, departure_date, departure_time, flight_duration, stops_str)
+
+        elif self.flight_time == "arrival time":
+            return "{} {} Arrival in {}{} on {} at {}. {}. {}".format(trip_leg, airline_name, arrival_place, arrival_terminal, arrival_date, arrival_time, flight_duration, stops_str)
+
+    def insert_booking_details(self,quote_id):
+        quote = self.res[quote_id]
+        prices = amadeus.shopping.flight_offers.pricing.post(quote).data
+        itineraries = quote["itineraries"]
+        outbound = itineraries[0]
+        values_list = []
+        # outbound_prices = prices["flightOffers"][0]["itineraries"][0]
+        # inbound_prices = prices["flightOffers"][0]["itineraries"][1]
+        pnr = self.get_pnr()
+        if self.return_date:
+            self.round_trip=True
+            inbound = itineraries[1]
+            self.inbound_params = self.get_booking_params(pnr,prices,quote,inbound,"in")
+            values_list.append(self.inbound_params)
+        else:
+            self.round_trip=False
+
+        self.outbound_params = self.get_booking_params(pnr,prices,quote,outbound,"out")
+        values_list.append(self.outbound_params)
+
+        send_email = self.send_email_confirmation(self.outbound_params,pnr)
+        with self.engine.connect() as connection:
+            try:
+                query = insert(self.bookings, inline = False)
+                ResultProxy = connection.execute(query,values_list)
+            except:
+                connection.rollback()
+
+        return pnr
+
+        #print("booking details inserted")
+
+    def get_pnr(self):
+        return "PNR"+str(uuid.uuid4().hex[:4])
+
+    def get_booking_params(self, pnr,prices, quote, travel_leg,travel_bound):
+        booking_params = {}
+        pnr_bound_extension = {"in":"IB","out":"OB"}
+        booking_params["pnr"] = pnr+pnr_bound_extension.get(travel_bound)
+        booking_params["booking_date"] = datetime.now().strftime("%Y-%m-%d")
+        departure = travel_leg["segments"][0]["departure"]
+        booking_params["source_iata"] = departure["iataCode"]
+        booking_params["source_terminal"] = departure.get("terminal")
+        arrival = travel_leg["segments"][-1]["arrival"]
+        booking_params["destination_iata"] = arrival["iataCode"]
+        booking_params["destination_terminal"] = arrival.get("terminal")
+        stops = {"segments":travel_leg["segments"]}
+        if self.round_trip:
+            booking_params["stops"] = str(json.dumps(stops))
+        booking_params["no_of_stops"] = len(travel_leg["segments"])-1
+        booking_params["flight_number"] = travel_leg["segments"][0]["number"]
+        booking_params["aircraft_type"] = travel_leg["segments"][0]["aircraft"]["code"]
+        booking_params["depart_date"], booking_params["depart_time"] = departure["at"].split("T")
+        booking_params["arrive_date"], booking_params["arrive_time"] = arrival["at"].split("T")
+        segment_fare_details = list(filter(lambda x: x['travelerType'] == 'ADULT', prices.get('flightOffers')[0].get('travelerPricings')))[0]
+        baggage_allowance = segment_fare_details['fareDetailsBySegment'][-1]['includedCheckedBags']
+        booking_params["baggage_allowance_weight"] = int(baggage_allowance["weight"])
+        booking_params["baggage_allowance_unit"] = baggage_allowance["weightUnit"]
+        booking_params["airline_iata"] = travel_leg["segments"][0]["carrierCode"]
+        booking_params["flight_duration"] = self.duration_format(travel_leg["duration"]).replace(" Total duration: ","")
+        booking_params["travel_class"] = self.travelClass
+        booking_params["adult_paxno"] = int(self.adults)
+        booking_params["child_paxno"] = int(self.children)
+        booking_params["infant_paxno"] = int(self.infants)
+        booking_params["currency"] = self.currencyCode
+        booking_params["base_fare"] = float(prices.get('flightOffers')[0].get('price').get('base'))
+        booking_params["supplier_fee"] = float(list(filter(lambda x:x["type"] == "SUPPLIER", prices["flightOffers"][0]["price"]["fees"]))[0]["amount"])
+        booking_params["ticketing_fee"] = float(list(filter(lambda x:x["type"] == "TICKETING", prices["flightOffers"][0]["price"]["fees"]))[0]["amount"])
+        booking_params["form_of_payment_fee"] = float(list(filter(lambda x:x["type"] == "FORM_OF_PAYMENT", prices["flightOffers"][0]["price"]["fees"]))[0]["amount"])
+        total_tax = 0.0
+        for traveler in prices.get("flightOffers")[0].get("travelerPricings"):
+            for tax in traveler.get("price").get("taxes"):
+                total_tax += float(tax.get("amount"))
+        booking_params["fare_basis_code"] = prices.get("flightOffers")[0].get("travelerPricings")[0].get('fareDetailsBySegment')[0].get("fareBasis")
+        booking_params["tax"] = total_tax
+        booking_params["travel_bound"] = travel_bound
+        booking_params["email_id"] = self.email_id
+        booking_params["mobile_no"] = self.mobile_no
+        booking_params["country_code"] = self.country_code
+        booking_params["title"] = self.title
+        booking_params["user_name"] = self.user_name
+        return booking_params
+
+    def get_email_params(self,booking_params, pnr):
+        email_params = {k:booking_params[k] for k in ["pnr","base_fare","supplier_fee","ticketing_fee","form_of_payment_fee","tax","email_id","mobile_no","country_code"]}
+        email_params["airline_name"] = "<strong>"+amadeus.reference_data.airlines.get(airlineCodes=booking_params["airline_iata"]).data[0]["businessName"].title()+"</strong>"
+        email_params["airline_iata"] = "<strong>"+booking_params["airline_iata"]+"</strong>"
+        email_params["baggage_allowance"] = str(booking_params["baggage_allowance_weight"])+booking_params["baggage_allowance_unit"].lower()
+        email_params["user_name"] = booking_params["title"]+". "+booking_params["user_name"]
+        email_params["total"] = booking_params["base_fare"]+booking_params["supplier_fee"]+booking_params["ticketing_fee"]+booking_params["form_of_payment_fee"]+booking_params["tax"]
+        email_params["outbound"] = {
+                                    "source_place" : get_city_name(self.outbound_params["source_iata"]),
+                                    "destination_place" : get_city_name(self.outbound_params["destination_iata"]),
+                                    "depart_date" : datetime.strptime(self.outbound_params["depart_date"],"%Y-%m-%d").strftime("%a, %d %b %Y"),
+                                    "depart_time" : self.outbound_params["depart_time"][:5],
+                                    "arrive_time" : self.outbound_params["arrive_time"][:5],
+                                    "no_of_stops" : self.outbound_params["no_of_stops"],
+                                    "flight_no" : self.outbound_params["flight_number"],
+                                    "flight_duration" : self.outbound_params["flight_duration"]
+                                    }
+        if self.round_trip:
+            email_params["inbound"] = {
+                                        "source_place" : get_city_name(self.inbound_params["source_iata"]),
+                                        "destination_place" : get_city_name(self.inbound_params["destination_iata"]),
+                                        "depart_date" : datetime.strptime(self.inbound_params["depart_date"],"%Y-%m-%d").strftime("%a, %d %b %Y"),
+                                        "depart_time" : self.inbound_params["depart_time"][:5],
+                                        "arrive_time" : self.inbound_params["arrive_time"][:5],
+                                        "no_of_stops" : self.inbound_params["no_of_stops"],
+                                        "flight_no" : self.inbound_params["flight_number"],
+                                        "flight_duration" : self.inbound_params["flight_duration"]
+                                        }
+
+        return email_params
+
+    def send_email_confirmation(self,booking_params,pnr):
+        data = self.get_email_params(booking_params,pnr)
+        log = logging.getLogger(__name__)
+        message = Mail(from_email='davey_s@live.com',
+                       to_emails=booking_params["email_id"],
+                       subject='TravelAgentBot: Flight booking confirmation')
+        if self.round_trip:
+            message.template_id = 'd-748c320bcc8e479f9b7752f1d5f148a7'
+        else:
+            message.template_id = 'd-adb0a556a2a443a2b7418c339d3f4550'
+        message.dynamic_template_data = data
+        try:
+            sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+            response = sg.send(message)
+            log.info(f"email.status_code={response.status_code}")
+        except HTTPError as e:
+            log.error(e)
+
+
+    def generate_flight_round_trip_quotes(self):
+        gfp = iter(self.generate_flight_quotes())
+        quote = 1
+        while True:
+            try:
+                out = "Onward journey: {}\nReturn journey: {}".format(
+                    next(gfp), next(gfp))
+                #quote += 1
+                yield out
+            except StopIteration:
+                return None
+
+    def duration_format(self, time):
+        time_val = [s for s in re.split(r"[PT,H,M]", time) if s.isdigit()]
+        if "H" in time and len(time_val) == 1:
+            hours = time_val[0]
+            # self.flight_duration_str = "{}h".format(hours)
+            return " Total duration: {}h".format(hours)
+        elif "M" in time and len(time_val) == 1:
+            minutes = time_val[0]
+            # self.flight_duration_str = "{}m".format(minutes)
+            return " Total duration: {}m".format(minutes)
+        else:
+            hours, minutes = time_val
+            # self.flight_duration_str = "{}h and {}m".format(hours, minutes)
+            return " Total duration: {}h and {}m".format(hours, minutes)
+
+    def datetime_format(self, date_time):
+        date, time = date_time.split("T")
+        date = datetime.strptime(
+            date, "%Y-%m-%d").strftime("%B %d, %Y").lstrip("0").replace(" 0", " ")
+        time = datetime.strptime(time, "%H:%M:%S").strftime(
+            "%I:%M %p").lstrip("0").replace(" 0", " ")
+        return [date, time]
+
+    def stops_format(self, segments):
+        stops = []
+        no_of_segments = len(segments)
+        if no_of_segments > 2:
+            stop_no = 1
+            for segment in segments[:-1]:
+                segment_id = segment["id"]
+                [date, time] = self.datetime_format(segment["arrival"]["at"])
+                stops.append("{}.{} at {} on {}".format(
+                    stop_no, get_city_name(segment["arrival"]["iataCode"]), time, date))
+                stop_no += 1
+            stops_str = "{} stops at: ".format(no_of_segments - 1)
+            stops_str += " and ".join([",".join(stops[:-1]), stops[-1]])
+        elif no_of_segments == 2:
+            segment = segments[0]
+            [date, time] = self.datetime_format(segment["arrival"]["at"])
+            stops.append("{} at {} on {}".format(get_city_name(
+                segment["arrival"]["iataCode"]), time, date.replace(",", "")))
+            stops_str = "1 stop at: {}".format(stops[0])
+        else:
+            stops_str = ""
+        return stops_str
+
+# if __name__ == "__main__":
+#     a = AmadeusFlight(originLocation="Bangalore", destinationLocation="Dubai", departureDate="2020-10-05",
+#                       returnDate="2020-11-26", adults=3, children=3, infants=2, travelClass="ECONOMY", currencyCode="INR",
+#                      title="Mr", user_name="David Abraham",email_id="david@daveabraham.me",mobile_no=9850369780,country_code=91)
+#
+#     pnr = a.insert_booking_details(1)
+#     print(pnr)
+
+# gfp = iter(a.generate_flight_quotes())
+#
 # while True:
 #     try:
 #         output = next(gfp)
 #         print(output)
+#         print("\n\n")
 #     except StopIteration:
 #         break
+
+
+
+
+
+
+# a = AmadeusFlight(originLocation="Mumbai", destinationLocation="Sydney",
+#                   departureDate="2020-07-01", nonStop="false", adults=1, max=5)
+# gfp_ = iter(a.generate_flight_quotes())
+#
+# for output in gfp_:
+#     print(output)
+#     print("\n")

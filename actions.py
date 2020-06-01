@@ -17,11 +17,12 @@ from rasa_sdk.events import SlotSet, FollowupAction
 from rasa_sdk.forms import FormAction
 from rasa_sdk.events import AllSlotsReset
 from amadeus_endpoint import AmadeusFlight
-from iata_mapping import get_city_name, get_airline_name
+from retrieve_information import RetrieveBookingInformation
+from iata_mapping import get_city_name, get_airline_name, get_airline_iata
 import re
-import datetime
+from datetime import datetime
 
-
+a = ""
 class ActionSlotReset(Action):
 
     def name(self) -> Text:
@@ -34,6 +35,61 @@ class ActionSlotReset(Action):
         return [AllSlotsReset()]
 
 
+class ActionBookingConfirmation(Action):
+    def name(self) -> Text:
+        return "action_booking_confirmation"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        quote_id = int(tracker.get_slot("quote_id"))
+        global a
+        try:
+            pnr = a.insert_booking_details(quote_id-1)
+        except:
+            dispatcher.utter_message("Sorry booking unsuccessful. Please try again")
+            return []
+        else:
+            dispatcher.utter_message("Booking successful. Your booking reference/pnr is {}".format(pnr))
+            return []
+
+class RetrieveBookingInfoForm(FormAction):
+    def name(self) -> Text:
+        return "retrieve_booking_info_form"
+
+    @staticmethod
+    def required_slots(tracker: Tracker) -> List[Text]:
+        """A list of required slots that the form has to fill"""
+        return ["pnr"]
+
+    def slot_mappings(self) -> Dict[Text, Any]:
+        """A dictionary to map required slots to
+            - an extracted entity
+            - intent: value pairs
+            - a whole message
+            or a list of them, where a first match will be picked"""
+
+
+        return {"pnr": self.from_entity(entity="pnr", intent=["inform_pnr"])}
+
+    def submit(self,
+               dispatcher: CollectingDispatcher,
+               tracker: Tracker,
+               domain: Dict[Text, Any],
+               ) -> List[Dict]:
+        """Define what the form has to do
+            after all required slots are filled"""
+
+        # utter submit template
+        pnr = tracker.get_slot("pnr")
+        r = RetrieveBookingInformation(pnr)
+        out, title, user_name, email_id, country_code, mobile_no = r.get_booking_details()
+        dispatcher.utter_message(out)
+
+        return [SlotSet("title",title),SlotSet("user_name",user_name),SlotSet("email_id",email_id),SlotSet("country_code",country_code),SlotSet("mobile_no",mobile_no),SlotSet("pnr",None)]
+
+
 class FlightBookingForm(FormAction):
     """Custom form action to fill all slots required to find specific type
     of healthcare facilities in a certain city or zip code."""
@@ -43,28 +99,59 @@ class FlightBookingForm(FormAction):
 
         return "flight_booking_form"
 
+
     @staticmethod
     def required_slots(tracker: Tracker) -> List[Text]:
         """A list of required slots that the form has to fill"""
 
-        if tracker.get_slot('round_trip') == "round trip":
+        if tracker.get_slot('child_passengers') and tracker.get_slot('infant_passengers') and tracker.get_slot("round_trip") == "round trip":
 
-            if tracker.get_slot('child_passengers'):
+            return ["fromloc.city_name", "toloc.city_name", "depart_date", "no_of_adults", "child_passengers", "no_of_children", "infant_passengers", "no_of_infants", "class_type", "currency_code", "round_trip", "return_date", "flight_stop_check","email_id","title","user_name","mobile_no","country_code"]
 
-                if tracker.get_slot('infant_passengers'):
-                    return ["fromloc.city_name", "toloc.city_name", "depart_date", "no_of_adults", "child_passengers", "infant_passengers", "no_of_children", "no_of_infants", "class_type", "currency_code", "round_trip", "return_date"]
+        elif tracker.get_slot('child_passengers') and tracker.get_slot('infant_passengers') and not(tracker.get_slot("round_trip") == "round trip"):
 
-                else:
-                    return ["fromloc.city_name", "toloc.city_name", "depart_date", "no_of_adults", "child_passengers", "infant_passengers", "no_of_children", "class_type", "currency_code", "round_trip", "return_date"]
+            return ["fromloc.city_name", "toloc.city_name", "depart_date", "no_of_adults", "child_passengers", "no_of_children", "infant_passengers", "no_of_infants", "class_type", "currency_code", "round_trip", "flight_stop_check","email_id","title","user_name","mobile_no","country_code"]
 
-            else:
-                 return ["fromloc.city_name", "toloc.city_name", "depart_date", "no_of_adults", "child_passengers", "infant_passengers", "class_type", "currency_code", "round_trip", "return_date"]
+        elif tracker.get_slot('child_passengers') and not(tracker.get_slot('infant_passengers')) and tracker.get_slot("round_trip") == "round trip":
+
+            return ["fromloc.city_name", "toloc.city_name", "depart_date", "no_of_adults", "child_passengers", "no_of_children", "infant_passengers", "class_type", "currency_code", "round_trip", "return_date", "flight_stop_check","email_id","title","user_name","mobile_no","country_code"]
+
+        elif not(tracker.get_slot('child_passengers')) and tracker.get_slot('infant_passengers') and tracker.get_slot("round_trip") == "round trip":
+
+            return ["fromloc.city_name", "toloc.city_name", "depart_date", "no_of_adults", "child_passengers", "infant_passengers", "no_of_infants", "class_type", "currency_code", "round_trip", "return_date", "flight_stop_check","email_id","title","user_name","mobile_no","country_code"]
+
+        elif tracker.get_slot('child_passengers') and not(tracker.get_slot('infant_passengers')) and not(tracker.get_slot("round_trip") == "round trip"):
+
+            return ["fromloc.city_name", "toloc.city_name", "depart_date", "no_of_adults", "child_passengers", "no_of_children", "infant_passengers", "class_type", "currency_code", "round_trip", "flight_stop_check","email_id","title","user_name","mobile_no","country_code"]
+
+        elif not(tracker.get_slot('child_passengers')) and tracker.get_slot('infant_passengers') and not(tracker.get_slot("round_trip") == "round trip"):
+
+            return ["fromloc.city_name", "toloc.city_name", "depart_date", "no_of_adults", "child_passengers", "infant_passengers", "no_of_infants", "class_type", "currency_code", "round_trip", "flight_stop_check","email_id","title","user_name","mobile_no","country_code"]
+
+        elif not(tracker.get_slot('child_passengers')) and not(tracker.get_slot('infant_passengers')) and tracker.get_slot("round_trip") == "round trip":
+
+            return ["fromloc.city_name", "toloc.city_name", "depart_date", "no_of_adults", "child_passengers", "infant_passengers", "class_type", "currency_code", "round_trip", "return_date", "flight_stop_check","email_id","title","user_name","mobile_no","country_code"]
 
         else:
-            return ["fromloc.city_name", "toloc.city_name", "depart_date", "no_of_adults", "child_passengers", "infant_passengers", "class_type", "currency_code", "round_trip"]
 
+            return ["fromloc.city_name", "toloc.city_name", "depart_date", "no_of_adults", "child_passengers", "infant_passengers", "class_type", "currency_code", "round_trip", "flight_stop_check","email_id","title","user_name","mobile_no","country_code"]
 
-
+        # if tracker.get_slot('child_passengers'):
+        #
+        #     if tracker.get_slot('infant_passengers'):
+        #
+        #         if tracker.get_slot("round_trip") == "round trip"
+        #
+        #             return ["fromloc.city_name", "toloc.city_name", "depart_date", "no_of_adults", "child_passengers", "no_of_children", "infant_passengers", "no_of_infants", "class_type", "currency_code", "round_trip", "return_date", "flight_stop_check","email_id","title","user_name","mobile_no","country_code"]
+        #
+        #         else:
+        #             return ["fromloc.city_name", "toloc.city_name", "depart_date", "no_of_adults", "child_passengers", "no_of_children", "infant_passengers", "no_of_infants", "class_type", "currency_code", "round_trip", "flight_stop_check","email_id","title","user_name","mobile_no","country_code"]
+        #
+        #     else:
+        #          return ["fromloc.city_name", "toloc.city_name", "depart_date", "no_of_adults", "child_passengers", "no_of_children", "infant_passengers", "class_type", "currency_code", "round_trip", "return_date", "flight_stop_check","email_id","title","user_name","mobile_no","country_code"]
+        #
+        # else:
+        #     return ["fromloc.city_name", "toloc.city_name", "depart_date", "no_of_adults", "child_passengers", "infant_passengers", "class_type", "currency_code", "round_trip", "flight_stop_check","email_id","title","user_name","mobile_no","country_code"]
 
 
 
@@ -86,6 +173,9 @@ class FlightBookingForm(FormAction):
 
                 "infant_passengers": [self.from_intent(intent="affirm", value=True),
                                       self.from_intent(intent="deny", value=False)],
+
+                "flight_stop_check": [self.from_intent(intent="affirm", value="true"),
+                                      self.from_intent(intent="deny", value="false")],
 
                 "no_of_adults": self.from_entity(entity="no_of_adults",
                                                  intent=["flight",
@@ -109,7 +199,23 @@ class FlightBookingForm(FormAction):
                                                   intent=["flight","inform_round_trip"]),
 
                 "return_date": self.from_entity(entity="time",
-                                                  intent=["inform_return_date"])}
+                                                  intent=["inform_return_date"]),
+
+                "email_id": self.from_entity(entity="email_id",
+                                                  intent=["inform_email_id"]),
+
+                "title": self.from_entity(entity="title",
+                                                  intent=["inform_title"]),
+
+                "user_name": self.from_entity(entity="user_name",
+                                                  intent=["inform_user_name"]),
+
+                "mobile_no": self.from_entity(entity="mobile_no",
+                                                  intent=["inform_mobile_no"]),
+
+                "country_code": self.from_entity(entity="country_code",
+                                                  intent=["inform_country_code"])}
+
 
     def submit(self,
                dispatcher: CollectingDispatcher,
@@ -121,18 +227,23 @@ class FlightBookingForm(FormAction):
         flight_source = tracker.get_slot("fromloc.city_name")
         flight_destination = tracker.get_slot("toloc.city_name")
         departure_datetime = tracker.get_slot("time")
-        # departure_datetime_ = re.split(r"[T,+,.]",str(departure_datetime))[:2]
         departure_date = tracker.get_slot("depart_date")
-        #departure_time = departure_datetime_[1]
+        return_date = tracker.get_slot("return_date")
         no_of_adults = int(tracker.get_slot("no_of_adults"))
         no_of_children = int(tracker.get_slot("no_of_children"))
         no_of_infants = int(tracker.get_slot("no_of_infants"))
         class_type = tracker.get_slot("class_type")
         currency_code = tracker.get_slot("currency_code")
         round_trip = tracker.get_slot("round_trip")
+        flight_stop = tracker.get_slot("flight_stop_check")
+        title = tracker.get_slot("title")
+        user_name = tracker.get_slot("user_name")
+        email_id = tracker.get_slot("email_id")
+        mobile_no = int(tracker.get_slot("mobile_no"))
+        country_code = int(tracker.get_slot("country_code"))
+        flight_stop_check = tracker.get_slot("flight_stop_check")
 
         currency_code_mapping = {"USD":"US Dollars","EUR":"Euros","JPY":"Japanese Yen","GBP":"Pound Sterling","CHF":"Swiss Francs", "INR":"Indian Rupees","AUD":"Australian Dollars","CAD":"Canadian Dollars","CNY":"Chinese Yuan Renminbi"}
-
 
         adults = ""
         children = ""
@@ -154,24 +265,22 @@ class FlightBookingForm(FormAction):
             infants = "and " + str(no_of_infants) + " infants"
 
         if round_trip == "round trip":
-            return_date = tracker.get_slot("return_date")
+            return_date = "Return date: "+tracker.get_slot("return_date")
         else:
             return_date = ""
 
-        out = "Checking information about available flights for the route {} --> {} on {} for {} {} {} in {} class. {} Payment currency is {}. The following flights are available: ".format(flight_source, flight_destination, str(departure_date)[:10], adults, children,
-                                                                                                                                                                                      infants, class_type.title(), return_date, currency_code_mapping.get(currency_code))
-
-        #dispatcher.utter_message(text=out)
-
+        out = "Checking information about available flights for the route {} --> {} on {} for {} {} {} in {} class. {}. The following flights are available: ".format(flight_source, flight_destination, str(departure_date)[:10], adults, children,
+                                                                                                                                                                                      infants, class_type.title(), return_date)
         buttons = []
 
         try:
-            a = AmadeusFlight(originLocation=flight_source, destinationLocation=flight_destination, departureDate=str(departure_date)[:10],adults=no_of_adults,children=no_of_children,infants=no_of_infants)
+            global a
+            a = AmadeusFlight(originLocation=flight_source, destinationLocation=flight_destination, departureDate=departure_date,travelClass=class_type,returnDate=return_date,adults=no_of_adults,children=no_of_children,infants=no_of_infants,currencyCode=currency_code,nonStop=flight_stop_check,title=title,user_name=user_name,email_id=email_id,mobile_no=mobile_no,country_code=country_code)
         except Exception:
             pass
 
         else:
-            gfp = iter(a.generate_flight_prices())
+            gfp = iter(a.generate_flight_quotes())
             quote_id = 1
 
             while True:
@@ -190,6 +299,22 @@ class FlightBookingForm(FormAction):
 
         return []
 
+
+    def validate_no_of_adults(self,
+                                value: float,
+                                dispatcher: CollectingDispatcher,
+                                tracker: Tracker,
+                                domain: Dict[Text, Any],
+                                ) -> Dict[Text, Any]:
+
+        if int(value) <= 0:
+            dispatcher.utter_message("Atleast 1 adult should be travelling !")
+            SlotSet("no_of_adults",None)
+            return {"no_of_adults":None}
+
+        else:
+            return {"no_of_adults": value}
+
     def validate_child_passengers(self,
                                   value: bool,
                                   dispatcher: CollectingDispatcher,
@@ -202,6 +327,7 @@ class FlightBookingForm(FormAction):
 
         else:
             SlotSet("no_of_children", 0)
+            SlotSet("child_passengers", 0)
             return {"no_of_children": 0}
 
     def validate_infant_passengers(self,
@@ -216,6 +342,7 @@ class FlightBookingForm(FormAction):
 
         else:
             SlotSet("no_of_infants", 0)
+            SlotSet("infant_passengers", 0)
             return {"no_of_infants": 0}
 
 
@@ -226,7 +353,7 @@ class FlightBookingForm(FormAction):
                                 domain: Dict[Text, Any],
                                 ) -> Dict[Text, Any]:
 
-        if not(str(value).isdigit()) or value <= 0:
+        if not(str(value).isdigit()) or int(value) <= 0:
             SlotSet("child_passengers", False)
             SlotSet("no_of_children", 0)
             return {"no_of_children":0}
@@ -243,12 +370,12 @@ class FlightBookingForm(FormAction):
                                domain: Dict[Text, Any],
                                ) -> Dict[Text, Any]:
 
-        if value > tracker.get_slot("no_of_adults"):
+        if int(value) > int(tracker.get_slot("no_of_adults")):
             dispatcher.utter_message("The number of infants must be less than or same as the number of adults")
             SlotSet("no_of_infants", None)
             return {"no_of_infants": None}
 
-        if not(str(value).isdigit()) or value <= 0:
+        if not(str(value).isdigit()) or int(value) <= 0:
             SlotSet("infant_passengers", False)
             SlotSet("no_of_infants", 0)
             return {"no_of_infants": 0}
@@ -284,8 +411,8 @@ class FlightBookingForm(FormAction):
         time_entities = [e for e in tracker.latest_message["entities"] if e["entity"] == "time"]
         if tracker.latest_message['intent'].get('name') == "flight" and len(time_entities) > 1:
             [return_date, return_time, *extra] =  re.split(r"[T,+,.]",time_entities[-1]["value"])
-            depart_date = datetime.datetime.strptime(tracker.get_slot("depart_date"),"%Y-%m-%d").date()
-            return_date = datetime.datetime.strptime(return_date,"%Y-%m-%d").date()
+            depart_date = datetime.strptime(tracker.get_slot("depart_date"),"%Y-%m-%d").date()
+            return_date = datetime.strptime(return_date,"%Y-%m-%d").date()
 
             if return_date < depart_date:
                 dispatcher.utter_message("Return date should be after the departure date")
@@ -298,10 +425,10 @@ class FlightBookingForm(FormAction):
 
         else:
             [return_date, return_time, *extra] =  re.split(r"[T,+,.]",tracker.get_slot("time"))
-            return_date = datetime.datetime.strptime(return_date,"%Y-%m-%d").date()
-            depart_date = datetime.datetime.strptime(tracker.get_slot("depart_date"),"%Y-%m-%d").date()
+            return_date = datetime.strptime(return_date,"%Y-%m-%d").date()
+            depart_date = datetime.strptime(tracker.get_slot("depart_date"),"%Y-%m-%d").date()
             if return_date < depart_date:
-                dispatcher.utter_message("Return date should be after the departure date")
+                dispatcher.utter_message("You need to choose a return date after the departure date")
                 SlotSet("return_date",None)
                 SlotSet("time",None)
                 return {"return_date": None}
@@ -319,11 +446,220 @@ class FlightBookingForm(FormAction):
         """Validate departure date."""
 
         [depart_date, depart_time, *extra] =  re.split(r"[T,+,.]",tracker.get_slot("time"))
-        depart_date = datetime.datetime.strptime(depart_date,"%Y-%m-%d").date()
-        now = datetime.datetime.now().date()
+        depart_date = datetime.strptime(depart_date,"%Y-%m-%d").date()
+        now = datetime.now().date()
 
         if depart_date < now:
-            dispatcher.utter_message("Please choose a date in the present for flight search")
+            dispatcher.utter_message("Sorry you need to choose date in the present for me to search for flights")
+            SlotSet("depart_date",None)
+            SlotSet("time",None)
+            return {"depart_date": None}
+        else:
+            SlotSet("depart_date", str(depart_date))
+            return {"depart_date": str(depart_date)}
+
+    def validate_title(self,
+                      value: Text,
+                      dispatcher: CollectingDispatcher,
+                      tracker: Tracker,
+                      domain: Dict[Text, Any],
+                      ) -> Dict[Text, Any]:
+        """Validate departure date."""
+
+        if value:
+            SlotSet("title", value)
+            return {"title": value}
+        else:
+            SlotSet("title", None)
+            return {"title": None}
+
+    # def validate_time(self,
+    #                   value: Text,
+    #                   dispatcher: CollectingDispatcher,
+    #                   tracker: Tracker,
+    #                   domain: Dict[Text, Any],
+    #                   ) -> Dict[Text, Any]:
+    #     """Validate duckling time entity"""
+    #
+    #     # latest_intent = tracker.latest_message['intent'].get('name')
+    #
+    #     # if latest_intent == "flight" or latest_intent == "inform_departure_date":
+    #     if value:
+    #         if latest_intent == "flight" or latest_intent == "inform_departure_date":
+    #             [depart_date, depart_time, *extra] =  re.split(r"[T,+,.]",tracker.get_slot("time"))
+    #             depart_date = datetime.strptime(depart_date,"%Y-%m-%d").date()
+    #             now = datetime.now().date()
+    #
+    #             if depart_date < now:
+    #                 dispatcher.utter_message("Sorry you need to choose date in the present for me to search for flights")
+    #                 SlotSet("depart_date",None)
+    #                 SlotSet("time",None)
+    #                 return {"depart_date": None}
+    #             else:
+    #                 SlotSet("depart_date", str(depart_date))
+    #                 return {"depart_date": str(depart_date)}
+    #
+    #     else:
+    #         SlotSet("depart_date",None)
+    #         return {"depart_date": None}
+
+
+
+class FlightTimeForm(FormAction):
+    """Custom form action to fill all slots required to find flight schedule or
+    departure or arrival time for a route for a certain date."""
+
+    def name(self) -> Text:
+        """Unique identifier of the form"""
+
+        return "flight_time_form"
+
+    @staticmethod
+    def required_slots(tracker: Tracker) -> List[Text]:
+        """A list of required slots that the form has to fill"""
+
+        return ["fromloc.city_name", "toloc.city_name", "depart_date"]
+
+
+    def slot_mappings(self) -> Dict[Text, Any]:
+        return {"fromloc.city_name": self.from_entity(entity="fromloc.city_name",
+                                                      intent=["flight_time","inform_departure_city"]),
+
+                "toloc.city_name": self.from_entity(entity="toloc.city_name",
+                                                    intent=["flight_time","inform_arrival_city"]),
+
+                "depart_date": self.from_entity(entity="time",
+                                                intent=["flight_time","inform_departure_date"]),
+
+                "airline_name": self.from_entity(entity="airline_name",
+                                                intent=["flight_time"]),
+
+                "airline_code": self.from_entity(entity="airline_code",
+                                                intent=["flight_time"]),
+
+                "class_type": self.from_entity(entity="class_type",
+                                               intent=["flight_time"]),
+
+                "flight_time": self.from_entity(entity="flight_time",
+                                               intent=["flight_time"]),
+
+                "flight_mod": self.from_entity(entity="flight_mod",
+                                               intent=["flight_time"]),
+
+                "flight_stop": self.from_entity(entity="flight_stop",
+                                               intent=["flight_time"]),
+
+                "flight_number": self.from_entity(entity="flight_number",
+                                               intent=["flight_time"]),
+
+                "aircraft_code": self.from_entity(entity="aircraft_code",
+                                               intent=["flight_time"]),
+
+                "no_of_adults": self.from_entity(entity="no_of_adults",
+                                                 intent=["flight_time"])}
+
+    def submit(self,
+               dispatcher: CollectingDispatcher,
+               tracker: Tracker,
+               domain: Dict[Text, Any]
+               ) -> List[Dict]:
+        """Once required slots are filled, print buttons for found facilities"""
+
+        params = {}
+
+        flight_source = tracker.get_slot("fromloc.city_name")
+        flight_destination = tracker.get_slot("toloc.city_name")
+        departure_date = tracker.get_slot("depart_date")
+        airline_name = tracker.get_slot("airline_name")
+        class_type = tracker.get_slot("class_type")
+        flight_time = tracker.get_slot("flight_time")
+        flight_mod = tracker.get_slot("flight_mod")
+        flight_number = tracker.get_slot("flight_number")
+        aircraft_code = tracker.get_slot("aircraft_code")
+        params["originLocation"] = flight_source
+        params["destinationLocation"] = flight_destination
+        params["departureDate"] = departure_date
+        params["flightTime"] = flight_time
+
+        if no_of_adults:
+            params["adults"] = int(no_of_adults)
+
+        if class_type:
+            params["travelClass"] = class_type
+
+        if flight_mod:
+            params["flightMod"] = flight_mod
+
+        if tracker.get_slot("flight_stop") == "stop":
+            params["nonStop"] = "true"
+
+        if airline_name:
+            airline_code = get_airline_iata(airline_name)
+            params["includedAirlineCodes"] = airline_code
+
+        elif airline_code:
+            params["includedAirlineCodes"] = airline_code
+
+
+        out = "Checking information about available flights for the route {} --> {} on {}. The following flights are available: ".format(flight_source, flight_destination, departure_date)
+        buttons = []
+
+        try:
+            a = AmadeusFlight(**params)
+        except Exception:
+            pass
+
+        else:
+            gfp = iter(a.generate_flight_quotes())
+            quote_id = 1
+
+            while True:
+                try:
+                    output = next(gfp)
+                    buttons.append({"title":output,"payload":"/quote{\"quote_id\":\""+str(quote_id)+"\"}"})
+                    quote_id = quote_id + 1
+                except StopIteration:
+                    quote_id = 1
+                    break
+
+        if len(buttons) == 0:
+            dispatcher.utter_message("No flights available for that route")
+        else:
+            dispatcher.utter_message(text=out,buttons=buttons)
+
+        return []
+
+
+    def validate_no_of_adults(self,
+                                value: float,
+                                dispatcher: CollectingDispatcher,
+                                tracker: Tracker,
+                                domain: Dict[Text, Any],
+                                ) -> Dict[Text, Any]:
+
+        if int(value) <= 0:
+            dispatcher.utter_message("Atleast 1 adult should be travelling !")
+            SlotSet("no_of_adults",None)
+            return {"no_of_adults":None}
+
+        else:
+            return {"no_of_adults": value}
+
+
+    def validate_depart_date(self,
+                      value: Text,
+                      dispatcher: CollectingDispatcher,
+                      tracker: Tracker,
+                      domain: Dict[Text, Any],
+                      ) -> Dict[Text, Any]:
+        """Validate departure date."""
+
+        [depart_date, depart_time, *extra] =  re.split(r"[T,+,.]",tracker.get_slot("time"))
+        depart_date = datetime.strptime(depart_date,"%Y-%m-%d").date()
+        now = datetime.now().date()
+
+        if depart_date < now:
+            dispatcher.utter_message("Sorry you need to choose date in the present for me to search for flights")
             SlotSet("depart_date",None)
             SlotSet("time",None)
             return {"depart_date": None}
@@ -351,15 +687,48 @@ class FlightBookingForm(FormAction):
     #                   ) -> Dict[Text, Any]:
     #     """Validate duckling time entity"""
     #
-    #     if value:
-    #         time_val = re.split(r"[T,+,.]",str(value))[:2]
-    #         if tracker.get_slot('return_flight'):
-    #             return_date_val = time_val[0]
-    #             return [SlotSet("return_date",return_date_val),SlotSet("time",None)]
+    #     latest_intent = tracker.latest_message['intent'].get('name')
     #
+    #     if latest_intent == "flight" or latest_intent == "inform_departure_date":
+    #         [depart_date, depart_time, *extra] =  re.split(r"[T,+,.]",tracker.get_slot("time"))
+    #         depart_date = datetime.strptime(depart_date,"%Y-%m-%d").date()
+    #         now = datetime.now().date()
+    #
+    #         if depart_date < now:
+    #             dispatcher.utter_message("Sorry you need to choose date in the present for me to search for flights")
+    #             SlotSet("depart_date",None)
+    #             SlotSet("time",None)
+    #             return {"depart_date": None}
     #         else:
-    #             depart_date_val = time_val[0]
-    #             return [SlotSet("depart_date", depart_date_val),SlotSet("time",None)]
+    #             SlotSet("depart_date", str(depart_date))
+    #             return {"depart_date": str(depart_date)}
     #
-    #     else:
-    #         return [SlotSet("time",None)]
+    #     elif latest_intent == "inform_return_date":
+    #         [return_date, return_time, *extra] =  re.split(r"[T,+,.]",tracker.get_slot("time"))
+    #         return_date = datetime.strptime(return_date,"%Y-%m-%d").date()
+    #         depart_datetime = tracker.get_slot("depart_date")
+    #         depart_date = datetime.strptime(depart_datetime,"%Y-%m-%d").date()
+    #
+    #         if return_date < depart_date:
+    #             dispatcher.utter_message("You need to choose a return date after the departure date")
+    #             SlotSet("return_date",None)
+    #             SlotSet("time",None)
+    #             return {"return_date": None}
+    #         else:
+    #             SlotSet("return_date", str(return_date))
+    #             return {"return_date": str(return_date)}
+
+
+
+        # if value:
+        #     time_val = re.split(r"[T,+,.]",str(value))[:2]
+        #     if tracker.get_slot('return_flight'):
+        #         return_date_val = time_val[0]
+        #         return [SlotSet("return_date",return_date_val),SlotSet("time",None)]
+        #
+        #     else:
+        #         depart_date_val = time_val[0]
+        #         return [SlotSet("depart_date", depart_date_val),SlotSet("time",None)]
+        #
+        # else:
+        #     return [SlotSet("time",None)]
