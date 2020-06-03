@@ -12,14 +12,30 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Email
 from python_http_client.exceptions import HTTPError
 import os
+import configparser
 
 
 # logger = logging.getLogger('your_logger')
 # logger.setLevel(logging.DEBUG)
+config = configparser.ConfigParser()
+config.read('config.ini')
+amadeus_client_id = config["amadeus"]["client_id"]
+amadeus_client_secret = config["amadeus"]["client_secret"]
+db_user = config["database"]["user"]
+db_password = config["database"]["password"]
+db_hostname = config["database"]["hostname"]
+db_name = config["database"]["dbname"]
+db_port = config["database"]["port"]
+oneway_template_id = config["sendgrid"]["template_id_one_way"]
+roundtrip_template_id = config["sendgrid"]["template_id_round_trip"]
+sendgrid_api_key = config["sendgrid"]["api_key"]
+
+db_connection_string = "mysql+mysqlconnector://{}:{}@{}:{}/{}".format(db_user,db_password,db_hostname,db_port,db_name)
+
 
 amadeus = Client(
-    client_id='6QQLRW6rZxxWehfqpoPXEOfkq2e6wCeB',
-    client_secret='bMQBEJK4y65keE5z'
+    client_id=amadeus_client_id,
+    client_secret=amadeus_client_secret
     # logger=logger
 )
 
@@ -61,7 +77,7 @@ class AmadeusFlight:
         if self.return_date:
             params["returnDate"] = returnDate
 
-        if travelClass:
+        if travelClass != "ANY_CLASS" and travelClass:
             params["travelClass"] = travelClass
 
         if includedAirlineCodes:
@@ -71,13 +87,12 @@ class AmadeusFlight:
             params["maxPrice"] = maxPrice
 
         try:
-            # response = amadeus.shopping.flight_offers_search.get(originLocationCode=self.originLocationCode,destinationLocationCode=self.destinationLocationCode,departureDate=self.departureDate,adults=self.adults)
             response = amadeus.shopping.flight_offers_search.get(**params)
             self.res = response.data
         except ResponseError as error:
             raise Exception("No flights available for that route")
         else:
-            self.engine = create_engine("mysql+mysqlconnector://root:Trivi@01@127.0.0.1:3306/flightinfodb", encoding="utf-8", echo = False)
+            self.engine = create_engine(db_connection_string, encoding="utf-8", echo = False)
             metadata = MetaData()
             self.bookings = Table("bookings",metadata,autoload=True,autoload_with=self.engine)
 
@@ -232,7 +247,6 @@ class AmadeusFlight:
 
         return pnr
 
-        #print("booking details inserted")
 
     def get_pnr(self):
         return "PNR"+str(uuid.uuid4().hex[:4])
@@ -323,12 +337,12 @@ class AmadeusFlight:
                        to_emails=booking_params["email_id"],
                        subject='TravelAgentBot: Flight booking confirmation')
         if self.round_trip:
-            message.template_id = 'd-748c320bcc8e479f9b7752f1d5f148a7'
+            message.template_id = roundtrip_template_id
         else:
-            message.template_id = 'd-adb0a556a2a443a2b7418c339d3f4550'
+            message.template_id = oneway_template_id
         message.dynamic_template_data = data
         try:
-            sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+            sg = SendGridAPIClient(sendgrid_api_key)
             response = sg.send(message)
             log.info(f"email.status_code={response.status_code}")
         except HTTPError as e:
@@ -351,15 +365,12 @@ class AmadeusFlight:
         time_val = [s for s in re.split(r"[PT,H,M]", time) if s.isdigit()]
         if "H" in time and len(time_val) == 1:
             hours = time_val[0]
-            # self.flight_duration_str = "{}h".format(hours)
             return " Total duration: {}h".format(hours)
         elif "M" in time and len(time_val) == 1:
             minutes = time_val[0]
-            # self.flight_duration_str = "{}m".format(minutes)
             return " Total duration: {}m".format(minutes)
         else:
             hours, minutes = time_val
-            # self.flight_duration_str = "{}h and {}m".format(hours, minutes)
             return " Total duration: {}h and {}m".format(hours, minutes)
 
     def datetime_format(self, date_time):
@@ -393,13 +404,23 @@ class AmadeusFlight:
             stops_str = ""
         return stops_str
 
-# if __name__ == "__main__":
-#     a = AmadeusFlight(originLocation="Bangalore", destinationLocation="Dubai", departureDate="2020-10-05",
-#                       returnDate="2020-11-26", adults=3, children=3, infants=2, travelClass="ECONOMY", currencyCode="INR",
-#                      title="Mr", user_name="David Abraham",email_id="david@daveabraham.me",mobile_no=9850369780,country_code=91)
-#
-#     pnr = a.insert_booking_details(1)
-#     print(pnr)
+if __name__ == "__main__":
+    a = AmadeusFlight(originLocation="Bangalore", destinationLocation="Dubai", departureDate="2020-10-05",
+                    adults=3, children=3, infants=2, travelClass="ECONOMY", currencyCode="INR",
+                     title="Mr", user_name="David Abraham",email_id="david@daveabraham.me",mobile_no=9850369780,country_code=91)
+
+    gfp = iter(a.generate_flight_quotes())
+
+    while True:
+        try:
+            output = next(gfp)
+            print(output)
+            print("\n\n")
+        except StopIteration:
+            break
+
+    # pnr = a.insert_booking_details(1)
+    # print(pnr)
 
 # gfp = iter(a.generate_flight_quotes())
 #

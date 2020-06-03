@@ -3,14 +3,25 @@ import mysql.connector
 from datetime import datetime
 import json
 from iata_mapping import get_city_name, get_airline_name
+import configparser
 
 currency_code_mapping = {"USD": ["US Dollars","$"], "EUR": ["Euros","€"], "JPY": ["Japanese Yen","¥"], "GBP": ["Pound Sterling","£"], "CHF": ["Swiss Francs","₣"],
                          "INR": ["Indian Rupees","₹"], "AUD": ["Australian Dollars","Aus$"], "CAD": ["Canadian Dollars","Can$"], "CNY": ["Chinese Yuan Renminbi","￥"]}
 
+config = configparser.ConfigParser()
+config.read('config.ini')
+db_user = config["database"]["user"]
+db_password = config["database"]["password"]
+db_hostname = config["database"]["hostname"]
+db_name = config["database"]["dbname"]
+db_port = config["database"]["port"]
+db_connection_string = "mysql+mysqlconnector://{}:{}@{}:{}/{}".format(db_user,db_password,db_hostname,db_port,db_name)
+
+
 class RetrieveBookingInformation:
     def __init__(self,pnr):
         self.pnr = pnr
-        self.engine = create_engine("mysql+mysqlconnector://root:Trivi@01@127.0.0.1:3306/flightinfodb", encoding="utf-8", echo = False)
+        self.engine = create_engine(db_connection_string, encoding="utf-8", echo = False)
         metadata = MetaData()
         self.bookings = Table("bookings",metadata,autoload=True,autoload_with=self.engine)
 
@@ -74,7 +85,6 @@ class RetrieveBookingInformation:
     def get_booking_details(self):
         with self.engine.connect() as connection:
             query = select([self.bookings]).where(self.bookings.c.pnr.like(self.pnr + '__%'))
-            # query = select([self.bookings]).where(self.bookings.columns.pnr == self.pnr)
             results = connection.execute(query).fetchall()
 
             if len(results) == 0 or len(self.pnr)<7:
@@ -126,7 +136,7 @@ class RetrieveBookingInformation:
 
             return out, title, user_name, email_id, country_code, mobile_no
 
-# if __name__ == "__main__":
-#     r = RetrieveBookingInformation('PNR5a7d')
-#     out, title, user_name, email_id, country_code, mobile_no = r.get_booking_details()
-#     print(out)
+if __name__ == "__main__":
+    r = RetrieveBookingInformation('PNRac7a')
+    out, title, user_name, email_id, country_code, mobile_no = r.get_booking_details()
+    print(out)

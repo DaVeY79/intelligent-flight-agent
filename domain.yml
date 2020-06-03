@@ -41,6 +41,8 @@ intents:
   - inform_country_code
   - inform_title
   - inform_pnr
+  - inform_departure_airport_code
+  - inform_arrival_airport_code
 
 entities:
   - aircraft_code
@@ -88,7 +90,7 @@ entities:
   - flight_time
   - fromloc.airport_code
   - fromloc.airport_name
-  - fromloc.city_name
+  - fromloc_city_name
   - fromloc.country_name
   - fromloc.state_code
   - fromloc.state_name
@@ -118,7 +120,7 @@ entities:
   - today_relative
   - toloc.airport_code
   - toloc.airport_name
-  - toloc.city_name
+  - toloc_city_name
   - toloc.country_name
   - toloc.state_code
   - toloc.state_name
@@ -134,6 +136,7 @@ entities:
   - return_date
   - flight_stop_check
   - email_id
+  - mobile_no
   - user_name
   - title
   - country_code
@@ -141,10 +144,16 @@ entities:
 
 slots:
 
-  fromloc.city_name:
+  fromloc.airport_code:
     type: text
 
-  toloc.city_name:
+  toloc.airport_code:
+    type: text
+
+  fromloc_city_name:
+    type: text
+
+  toloc_city_name:
     type: text
 
   airline_name:
@@ -185,6 +194,7 @@ slots:
   class_type:
     type: categorical
     values:
+    - ANY_CLASS
     - ECONOMY
     - PREMIUM_ECONOMY
     - BUSINESS
@@ -273,12 +283,14 @@ actions:
   - action_flight_search
   - action_slot_reset
   - action_booking_confirmation
+  - action_ask_from_airport
+  - action_ask_to_airport
   - utter_acknowledge_help
   - utter_aircraft
   - utter_airfare
-  - utter_ask_fromloc.city_name
+  - utter_ask_fromloc_city_name
   - utter_ask_depart_date
-  - utter_ask_toloc.city_name
+  - utter_ask_toloc_city_name
   - utter_ask_child_passengers
   - utter_ask_infant_passengers
   - utter_ask_no_of_adults
@@ -318,13 +330,13 @@ responses:
   utter_airfare:
   - text: Fare for that route/class sent to your inbox
 
-  utter_ask_fromloc.city_name:
+  utter_ask_fromloc_city_name:
   - text: Which city are you departing from ?
 
   utter_ask_depart_date:
   - text: On which day would you like to travel ?
 
-  utter_ask_toloc.city_name:
+  utter_ask_toloc_city_name:
   - text: Which city would you like to travel to ?
 
   utter_ask_no_of_adults:
@@ -345,6 +357,9 @@ responses:
   utter_ask_class_type:
   - text: "Choose your class of travel:"
     buttons:
+      - title: "Any class"
+        payload: '/inform_class_type{"class_type":"ANY_CLASS"}'
+
       - title: "Economy"
         payload: '/inform_class_type{"class_type":"ECONOMY"}'
 

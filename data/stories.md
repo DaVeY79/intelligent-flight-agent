@@ -24,13 +24,13 @@
 * flight OR flight+airfare
   - flight_booking_form
   - form{"name":"flight_booking_form"}
-  - slot{"requested_slot":"fromloc.city_name"}
-  - utter_ask_fromloc.city_name
+  - slot{"requested_slot":"fromloc_city_name"}
+  - utter_ask_fromloc_city_name
   - action_listen
 * form: inform_departure_city
   - form: flight_booking_form
-  - slot{"requested_slot":"toloc.city_name"}
-  - utter_ask_toloc.city_name
+  - slot{"requested_slot":"toloc_city_name"}
+  - utter_ask_toloc_city_name
   - action_listen
 * form: inform_arrival_city
   - form: flight_booking_form
@@ -234,16 +234,16 @@
 <!-- ## interactive_story_1
 * greet
     - utter_greet
-* flight{"toloc.city_name": "Delhi"}
-    - slot{"toloc.city_name": "Delhi"}
+* flight{"toloc_city_name": "Delhi"}
+    - slot{"toloc_city_name": "Delhi"}
     - flight_booking_form
     - form{"name": "flight_booking_form"}
-    - slot{"toloc.city_name": "Delhi"}
-    - slot{"requested_slot": "fromloc.city_name"}
-* form: inform_departure_city{"fromloc.city_name": "Pune"}
-    - slot{"fromloc.city_name": "Pune"}
+    - slot{"toloc_city_name": "Delhi"}
+    - slot{"requested_slot": "fromloc_city_name"}
+* form: inform_departure_city{"fromloc_city_name": "Pune"}
+    - slot{"fromloc_city_name": "Pune"}
     - form: flight_booking_form
-    - slot{"fromloc.city_name": "Pune"}
+    - slot{"fromloc_city_name": "Pune"}
     - slot{"requested_slot": "time"}
 * form: inform_departure_date{"time": "2020-09-21T00:00:00.000+00:00", "depart_date.month_name": "September"}
     - slot{"time": "2020-09-21T00:00:00.000+00:00"}
@@ -265,19 +265,18 @@
 ## interactive_story_2
 * greet
     - utter_greet
-* flight{"toloc.city_name": "Chennai", "depart_date.day_number": "12th", "depart_date.month_name": "August", "time": "2020-08-12T00:00:00.000+00:00"}
+* flight{"toloc_city_name": "Chennai", "depart_date.day_number": "12th", "depart_date.month_name": "August", "time": "2020-08-12T00:00:00.000+00:00"}
     - slot{"time": "2020-08-12T00:00:00.000+00:00"}
     - slot{"depart_date": "2020-08-12"}
-    - slot{"toloc.city_name": "Chennai"}
+    - slot{"toloc_city_name": "Chennai"}
     - flight_booking_form
     - form{"name": "flight_booking_form"}
-    - slot{"requested_slot": "fromloc.city_name"}
-    - utter_ask_fromloc.city_name
+    - slot{"requested_slot": "fromloc_city_name"}
+    - utter_ask_fromloc_city_name
     - action_listen
-* form: inform_departure_city{"fromloc.city_name": "Mumbai"}
-    - slot{"fromloc.city_name": "Mumbai"}
+* form: inform_departure_city{"fromloc_city_name": "Mumbai"}
+    - slot{"fromloc_city_name": "Mumbai"}
     - form: flight_booking_form
-    - slot{"fromloc.city_name": "Mumbai"}
     - slot{"requested_slot": "no_of_adults"}
     - utter_ask_no_of_adults
     - action_listen
@@ -357,8 +356,8 @@
 * form: inform_country_code{"country_code":"91"}   
     - slot{"country_code":"91"}
     - form: flight_booking_form
-    - slot{"fromloc.city_name": "Mumbai"}
-    - slot{"toloc.city_name": "Chennai"}
+    - slot{"fromloc_city_name": "Mumbai"}
+    - slot{"toloc_city_name": "Chennai"}
     - slot{"depart_date": "2020-08-12"}
     - slot{"no_of_adults":"1"}
     - slot{"child_passengers": false}
@@ -389,16 +388,16 @@
 ## interactive_story_3
 * greet
     - utter_greet
-* flight{"fromloc.city_name": "Paris"}
-    - slot{"fromloc.city_name": "Paris"}
+* flight{"fromloc_city_name": "Paris"}
+    - slot{"fromloc_city_name": "Paris"}
     - flight_booking_form
     - form{"name": "flight_booking_form"}
-    - slot{"fromloc.city_name": "Paris"}
-    - slot{"requested_slot": "toloc.city_name"}
-    - utter_ask_toloc.city_name
+    - slot{"fromloc_city_name": "Paris"}
+    - slot{"requested_slot": "toloc_city_name"}
+    - utter_ask_toloc_city_name
     - action_listen
-* form: inform_departure_city{"toloc.city_name": "London", "toloc.country_name": "UK"}
-    - slot{"toloc.city_name": "London"}
+* form: inform_departure_city{"toloc_city_name": "London", "toloc.country_name": "UK"}
+    - slot{"toloc_city_name": "London"}
     - form: flight_booking_form
     - slot{"requested_slot": "depart_date"}
     - utter_ask_depart_date
@@ -484,8 +483,8 @@
 * form: inform_country_code{"country_code":"33"}   
     - slot{"country_code":"33"}
     - form: flight_booking_form
-    - slot{"fromloc.city_name": "Paris"}
-    - slot{"toloc.city_name": "London"}
+    - slot{"fromloc_city_name": "Paris"}
+    - slot{"toloc_city_name": "London"}
     - slot{"depart_date": "2020-04-29"}
     - slot{"no_of_adults":"3"}
     - slot{"child_passengers": false}
@@ -517,10 +516,10 @@
 * greet
     - utter_greet
     - action_listen
-* flight{"fromloc.city_name": "Amsterdam","toloc.city_name": "Leeds", "depart_date.day_number": "seventh", "depart_date.month_name": "july", "time": "2020-08-12T00:00:00.000+00:00"}
-    - slot{"fromloc.city_name": "Amsterdam"}
+* flight{"fromloc_city_name": "Amsterdam","toloc_city_name": "Leeds", "depart_date.day_number": "seventh", "depart_date.month_name": "july", "time": "2020-08-12T00:00:00.000+00:00"}
+    - slot{"fromloc_city_name": "Amsterdam"}
     - slot{"depart_date": "2020-08-12"}
-    - slot{"toloc.city_name": "Leeds"}
+    - slot{"toloc_city_name": "Leeds"}
     - flight_booking_form
     - form{"name": "flight_booking_form"}
     - slot{"requested_slot": "no_of_adults"}
@@ -614,9 +613,9 @@
 * form: inform_country_code{"country_code":"31"}   
     - slot{"country_code":"31"}
     - form: flight_booking_form
-    - slot{"fromloc.city_name": "Amsterdam"}
+    - slot{"fromloc_city_name": "Amsterdam"}
     - slot{"depart_date": "2020-08-12"}
-    - slot{"toloc.city_name": "Leeds"}
+    - slot{"toloc_city_name": "Leeds"}
     - slot{"no_of_adults":"3"}
     - slot{"child_passengers": true}
     - slot{"infant_passengers": true}
@@ -648,14 +647,14 @@
 * greet
     - utter_greet
     - action_listen
-* flight{"fromloc.city_name": "Hong Kong", "toloc.city_name": "Madrid", "depart_date.date_relative": "next", "depart_date.day_name": "thursday", "time": "2020-05-07T00:00:00.000+00:00"}
-    - slot{"fromloc.city_name": "Hong Kong"}
+* flight{"fromloc_city_name": "Hong Kong", "toloc_city_name": "Madrid", "depart_date.date_relative": "next", "depart_date.day_name": "thursday", "time": "2020-05-07T00:00:00.000+00:00"}
+    - slot{"fromloc_city_name": "Hong Kong"}
     - slot{"time": "2020-05-07T00:00:00.000+00:00"}
-    - slot{"toloc.city_name": "Madrid"}
+    - slot{"toloc_city_name": "Madrid"}
     - flight_booking_form
     - form{"name": "flight_booking_form"}
-    - slot{"fromloc.city_name": "Hong Kong"}
-    - slot{"toloc.city_name": "Madrid"}
+    - slot{"fromloc_city_name": "Hong Kong"}
+    - slot{"toloc_city_name": "Madrid"}
     - slot{"depart_date": "2020-05-07"}
     - slot{"requested_slot": "no_of_adults"}
     - utter_ask_no_of_adults
@@ -748,8 +747,8 @@
 * form: inform_country_code{"country_code":"852"}   
     - slot{"country_code":"852"}
     - form: flight_booking_form
-    - slot{"fromloc.city_name": "Hong Kong"}
-    - slot{"toloc.city_name": "Madrid"}
+    - slot{"fromloc_city_name": "Hong Kong"}
+    - slot{"toloc_city_name": "Madrid"}
     - slot{"depart_date": "2020-05-07"}
     - slot{"no_of_adults": "3"}
     - slot{"child_passengers": true}
@@ -781,15 +780,15 @@
 * greet
     - utter_greet
     - action_listen
-* flight{"toloc.city_name": "Dubai", "time": "2020-10-05T00:00:00.000+00:00", "depart_date.month_name": "October", "depart_date.day_number": "5th","depart_date": "2020-10-05"}
-    - slot{"toloc.city_name": "Dubai"}
+* flight{"toloc_city_name": "Dubai", "time": "2020-10-05T00:00:00.000+00:00", "depart_date.month_name": "October", "depart_date.day_number": "5th","depart_date": "2020-10-05"}
+    - slot{"toloc_city_name": "Dubai"}
     - slot{"depart_date": "2020-10-05"}
     - slot{"time": "2020-10-05T00:00:00.000+00:00"}
     - flight_booking_form
     - form{"name": "flight_booking_form"}
-    - slot{"requested_slot": "fromloc.city_name"}
-* form: flight{"fromloc.city_name": "Bangalore"}
-    - slot{"fromloc.city_name": "Bangalore"}
+    - slot{"requested_slot": "fromloc_city_name"}
+* form: flight{"fromloc_city_name": "Bangalore"}
+    - slot{"fromloc_city_name": "Bangalore"}
     - form: flight_booking_form
     - slot{"requested_slot": "no_of_adults"}
     - utter_ask_no_of_adults
@@ -879,8 +878,8 @@
     - slot{"requested_slot": null}
     - flight_booking_form
     - form{"name": "flight_booking_form"}
-    - slot{"fromloc.city_name": "Bangalore"}
-    - slot{"toloc.city_name": "Dubai"}
+    - slot{"fromloc_city_name": "Bangalore"}
+    - slot{"toloc_city_name": "Dubai"}
     - slot{"depart_date": "2020-10-05"}
     - slot{"no_of_adults": "3"}
     - slot{"child_passengers": true}
@@ -950,14 +949,14 @@
 ## interactive_story_7
 * greet
     - utter_greet
-* flight{"fromloc.city_name": "Mumbai", "toloc.city_name": "Sydney", "depart_date.month_name": "august", "depart_date.day_number": "3rd", "time": "2020-08-03T00:00:00.000+00:00"}
-    - slot{"fromloc.city_name": "Mumbai"}
+* flight{"fromloc_city_name": "Mumbai", "toloc_city_name": "Sydney", "depart_date.month_name": "august", "depart_date.day_number": "3rd", "time": "2020-08-03T00:00:00.000+00:00"}
+    - slot{"fromloc_city_name": "Mumbai"}
     - slot{"time": "2020-08-03T00:00:00.000+00:00"}
-    - slot{"toloc.city_name": "Sydney"}
+    - slot{"toloc_city_name": "Sydney"}
     - flight_booking_form
     - form{"name": "flight_booking_form"}
-    - slot{"fromloc.city_name": "Mumbai"}
-    - slot{"toloc.city_name": "Sydney"}
+    - slot{"fromloc_city_name": "Mumbai"}
+    - slot{"toloc_city_name": "Sydney"}
     - slot{"requested_slot": "depart_date"}
 * form: inform_departure_date{"depart_date.month_name": "august", "depart_date.day_number": "3rd", "time": "2020-08-03T00:00:00.000+00:00"}
     - slot{"time": "2020-08-03T00:00:00.000+00:00"}
@@ -1043,8 +1042,8 @@
 * form: inform_country_code{"country_code":"91"}   
     - slot{"country_code":"91"}
     - form: flight_booking_form
-    - slot{"fromloc.city_name": "Mumbai"}
-    - slot{"toloc.city_name": "Sydney"}
+    - slot{"fromloc_city_name": "Mumbai"}
+    - slot{"toloc_city_name": "Sydney"}
     - slot{"depart_date": "2020-08-03"}
     - slot{"no_of_adults": "2"}
     - slot{"child_passengers": false}
@@ -1076,16 +1075,16 @@
 ## interactive_story_8
 * greet
     - utter_greet
-* flight{"fromloc.city_name": "Bangalore", "toloc.city_name": "Frankfurt", "time": "2020-11-28T00:00:00.000+00:00", "depart_date.day_number": "28th", "depart_date.month_name": "November"}
-    - slot{"fromloc.city_name": "Bangalore"}
+* flight{"fromloc_city_name": "Bangalore", "toloc_city_name": "Frankfurt", "time": "2020-11-28T00:00:00.000+00:00", "depart_date.day_number": "28th", "depart_date.month_name": "November"}
+    - slot{"fromloc_city_name": "Bangalore"}
     - slot{"time": "2020-11-28T00:00:00.000+00:00"}
-    - slot{"toloc.city_name": "Frankfurt"}
+    - slot{"toloc_city_name": "Frankfurt"}
     - flight_booking_form
     - form{"name": "flight_booking_form"}
-    - slot{"fromloc.city_name": "Bangalore"}
-    - slot{"toloc.city_name": "Frankfurt"}
-    - slot{"fromloc.city_name": "Bangalore"}
-    - slot{"toloc.city_name": "Frankfurt"}
+    - slot{"fromloc_city_name": "Bangalore"}
+    - slot{"toloc_city_name": "Frankfurt"}
+    - slot{"fromloc_city_name": "Bangalore"}
+    - slot{"toloc_city_name": "Frankfurt"}
     - slot{"requested_slot": "depart_date"}
 * form: inform_departure_date{"depart_date.month_name": "November", "depart_date.day_number": "28th", "time": "2020-11-28T00:00:00.000+00:00"}
     - slot{"time": "2020-11-28T00:00:00.000+00:00"}
@@ -1167,8 +1166,8 @@
 * form: inform_country_code{"country_code":"49"}   
     - slot{"country_code":"49"}
     - form: flight_booking_form
-    - slot{"fromloc.city_name": "Bangalore"}
-    - slot{"toloc.city_name": "Frankfurt"}
+    - slot{"fromloc_city_name": "Bangalore"}
+    - slot{"toloc_city_name": "Frankfurt"}
     - slot{"depart_date": "2020-11-28"}
     - slot{"no_of_adults": "2"}
     - slot{"child_passengers": false}
@@ -1197,18 +1196,18 @@
 * goodbye
     - utter_goodbye
 
-## interactive_story_1
+## interactive_story_9
 * greet
     - utter_greet
-* flight{"fromloc.city_name": "Bangalore", "toloc.city_name": "Dubai"}
-    - slot{"fromloc.city_name": "Bangalore"}
-    - slot{"toloc.city_name": "Dubai"}
+* flight{"fromloc_city_name": "Bangalore", "toloc_city_name": "Dubai"}
+    - slot{"fromloc_city_name": "Bangalore"}
+    - slot{"toloc_city_name": "Dubai"}
     - flight_booking_form
     - form{"name": "flight_booking_form"}
-    - slot{"fromloc.city_name": "Bangalore"}
-    - slot{"toloc.city_name": "Dubai"}
-    - slot{"fromloc.city_name": "Bangalore"}
-    - slot{"toloc.city_name": "Dubai"}
+    - slot{"fromloc_city_name": "Bangalore"}
+    - slot{"toloc_city_name": "Dubai"}
+    - slot{"fromloc_city_name": "Bangalore"}
+    - slot{"toloc_city_name": "Dubai"}
     - slot{"requested_slot": "depart_date"}
 * form: inform_departure_date{"depart_date.month_name": "October", "depart_date.day_number": "5th", "time": "2020-10-05T00:00:00.000+00:00"}
     - slot{"time": "2020-10-05T00:00:00.000+00:00"}
@@ -1259,10 +1258,10 @@
     - form: flight_booking_form
     - slot{"flight_stop_check": "false"}
     - slot{"requested_slot": "email_id"}
-* form: inform_email_id{"email_id": "david@daveabraham.me"}
-    - slot{"email_id": "david@daveabraham.me"}
+* form: inform_email_id{"email_id": "david@davidabraham.me"}
+    - slot{"email_id": "david@davidabraham.me"}
     - form: flight_booking_form
-    - slot{"email_id": "david@daveabraham.me"}
+    - slot{"email_id": "david@davidabraham.me"}
     - slot{"requested_slot": "title"}
     - utter_ask_title
 * greet{"title": "Mr"}
@@ -1274,10 +1273,10 @@
     - flight_booking_form
     - slot{"user_name": "David Abraham"}
     - slot{"requested_slot": "mobile_no"}
-* form: inform_mobile_no{"mobile_no": "9850369780", "number": "9850369780"}
-    - slot{"mobile_no": "9850369780"}
+* form: inform_mobile_no{"mobile_no": "9950369780", "number": "9950379780"}
+    - slot{"mobile_no": "9950379780"}
     - form: flight_booking_form
-    - slot{"mobile_no": "9850369780"}
+    - slot{"mobile_no": "9950379780"}
     - slot{"requested_slot": "country_code"}
 * form: inform_country_code{"country_code": "91", "number": "91"}
     - slot{"country_code": "91"}
@@ -1309,7 +1308,7 @@
     - form: retrieve_booking_info_form
     - slot{"title":"Mr"}
     - slot{"user_name":"David Abraham"}
-    - slot{"email_id":"daveynoire79@gmail.com"}
+    - slot{"email_id":"davidnoire79@gmail.com"}
     - slot{"country_code":"1"}
     - slot{"mobile_no":"7739345979"}
     - form{"name":null}
@@ -1407,4 +1406,102 @@
     - slot{"requested_slot": null}
     - utter_other_help
 * deny
+    - utter_goodbye
+
+## interactive_story_10
+* greet
+    - utter_greet
+* flight{"fromloc_city_name": "New York", "toloc_city_name": "London"}
+    - slot{"fromloc_city_name": "New York"}
+    - slot{"toloc_city_name": "London"}
+    - flight_booking_form
+    - form{"name": "flight_booking_form"}
+    - slot{"fromloc_city_name": "New York"}
+    - slot{"toloc_city_name": "London"}
+    - slot{"fromloc_city_name": "New York"}
+    - slot{"toloc_city_name": "London"}
+    - slot{"requested_slot": "time"}
+    - utter_ask_depart_date
+    - action_listen
+* form: flight{"depart_date.month_name": "December", "depart_date.day_number": "second", "time": "2020-12-02T00:00:00.000+00:00"}
+    - slot{"time": "2020-12-02T00:00:00.000+00:00"}
+    - flight_booking_form
+    - slot{"time": "2020-12-02T00:00:00.000+00:00"}
+    - slot{"depart_date": "2020-12-02"}
+    - slot{"requested_slot": "no_of_adults"}
+* form: inform_no_of_adults{"no_of_adults": "3", "number": 3}
+    - slot{"no_of_adults": "3"}
+    - form: flight_booking_form
+    - slot{"no_of_adults": 3}
+    - slot{"requested_slot": "child_passengers"}
+* form: deny
+    - form: flight_booking_form
+    - slot{"child_passengers": false}
+    - slot{"no_of_children": 0}
+    - slot{"requested_slot": "infant_passengers"}
+* form: deny
+    - form: flight_booking_form
+    - slot{"infant_passengers": false}
+    - slot{"no_of_infants": 0}
+    - slot{"requested_slot": "class_type"}
+    - utter_ask_class_type
+    - action_listen
+* form: inform_class_type{"class_type": "ANY_CLASS"}
+    - slot{"class_type": "ANY_CLASS"}
+    - flight_booking_form
+    - slot{"class_type": "ANY_CLASS"}
+    - slot{"requested_slot": "currency_code"}
+    - utter_ask_currency_code
+    - action_listen
+* form: inform_currency_code{"currency_code": "EUR"}
+    - slot{"currency_code": "EUR"}
+    - flight_booking_form
+    - slot{"currency_code": "EUR"}
+    - slot{"requested_slot": "round_trip"}
+    - utter_ask_round_trip
+    - action_listen
+* form: inform_round_trip{"round_trip": "round trip"}
+    - slot{"round_trip": "round trip"}
+    - flight_booking_form
+    - slot{"round_trip": "round trip"}
+    - slot{"requested_slot": "return_date"}
+* form: inform_return_date{"round_trip": "round trip", "time": "2020-12-20T00:00:00.000+00:00", "return_date.month_name": "December", "return_date.day_number": "twentieth"}
+    - slot{"round_trip": "round trip"}
+    - slot{"time": "2020-12-20T00:00:00.000+00:00"}
+    - form: flight_booking_form
+    - slot{"time": "2020-12-20T00:00:00.000+00:00"}
+    - slot{"return_date": "2020-12-20"}
+    - slot{"requested_slot": "flight_stop_check"}
+* form: deny
+    - form: flight_booking_form
+    - slot{"flight_stop_check": "false"}
+    - slot{"requested_slot": "email_id"}
+* form: inform_email_id{"email_id": "jim.hopper@gmail.com"}
+    - slot{"email_id": "jim.hopper@gmail.com"}
+    - form: flight_booking_form
+    - slot{"email_id": "jim.hopper@gmail.com"}
+    - slot{"requested_slot": "title"}
+    - utter_ask_title
+* affirm{"title": "Dr"}
+    - slot{"title": "Dr"}
+    - utter_ask_user_name
+    - action_listen
+* form: inform_user_name{"user_name": "Jim Hopper"}
+    - slot{"user_name": "Jim Hopper"}
+    - flight_booking_form
+    - slot{"user_name": "Jim Hopper"}
+    - slot{"requested_slot": "mobile_no"}
+* form: inform_mobile_no{"mobile_no": "9922851168", "number": 9922851168}
+    - slot{"mobile_no": "9922851168"}
+    - form: flight_booking_form
+    - slot{"mobile_no": "9922851168"}
+    - slot{"requested_slot": "country_code"}
+* form: inform_country_code{"number": 44}
+    - form: flight_booking_form
+    - slot{"country_code": 44}
+    - form{"name": null}
+    - slot{"requested_slot": null}
+* deny
+    - action_slot_reset
+    - reset_slots
     - utter_goodbye
