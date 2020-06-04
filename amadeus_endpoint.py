@@ -29,6 +29,7 @@ db_port = config["database"]["port"]
 oneway_template_id = config["sendgrid"]["template_id_one_way"]
 roundtrip_template_id = config["sendgrid"]["template_id_round_trip"]
 sendgrid_api_key = config["sendgrid"]["api_key"]
+sendgrid_from_email = config["sendgrid"]["from_email"]
 
 db_connection_string = "mysql+mysqlconnector://{}:{}@{}:{}/{}".format(db_user,db_password,db_hostname,db_port,db_name)
 
@@ -333,7 +334,7 @@ class AmadeusFlight:
     def send_email_confirmation(self,booking_params,pnr):
         data = self.get_email_params(booking_params,pnr)
         log = logging.getLogger(__name__)
-        message = Mail(from_email='davey_s@live.com',
+        message = Mail(from_email=sendgrid_from_email,
                        to_emails=booking_params["email_id"],
                        subject='TravelAgentBot: Flight booking confirmation')
         if self.round_trip:

@@ -1264,7 +1264,7 @@
     - slot{"email_id": "david@davidabraham.me"}
     - slot{"requested_slot": "title"}
     - utter_ask_title
-* greet{"title": "Mr"}
+* form: inform_title{"title": "Mr"}
     - slot{"title": "Mr"}
     - utter_ask_user_name
     - action_listen
@@ -1418,8 +1418,6 @@
     - form{"name": "flight_booking_form"}
     - slot{"fromloc_city_name": "New York"}
     - slot{"toloc_city_name": "London"}
-    - slot{"fromloc_city_name": "New York"}
-    - slot{"toloc_city_name": "London"}
     - slot{"requested_slot": "time"}
     - utter_ask_depart_date
     - action_listen
@@ -1482,7 +1480,7 @@
     - slot{"email_id": "jim.hopper@gmail.com"}
     - slot{"requested_slot": "title"}
     - utter_ask_title
-* affirm{"title": "Dr"}
+* form: inform_title{"title": "Dr"}
     - slot{"title": "Dr"}
     - utter_ask_user_name
     - action_listen
