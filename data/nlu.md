@@ -5199,7 +5199,7 @@
 - Option [2](quote_id)
 - Option [14](quote_id)
 - Option [91](quote_id)
-- [5](quote_id)[](number:5)
+- [5](quote_id)
 - Option [3](quote_id)
 
 ## intent:inform_departure_city
