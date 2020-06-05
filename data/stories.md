@@ -1654,3 +1654,108 @@
     - action_slot_reset
     - reset_slots
     - utter_goodbye
+
+## interactive_story_11
+* greet
+    - utter_greet
+* flight{"fromloc_city_name": "Paris", "toloc_city_name": "Seoul"}
+    - slot{"fromloc_city_name": "Paris"}
+    - slot{"toloc_city_name": "Seoul"}
+    - flight_booking_form
+    - form{"name": "flight_booking_form"}
+    - slot{"fromloc_city_name": "Paris"}
+    - slot{"toloc_city_name": "Seoul"}
+    - followup{"name": "action_ask_from_airport"}
+    - action_ask_from_airport
+    - action_listen
+* form: inform_departure_airport_code{"fromloc.airport_code": "cdg"}
+    - slot{"fromloc.airport_code": "cdg"}
+    - flight_booking_form
+    - followup{"name": "action_ask_to_airport"}
+    - action_ask_to_airport
+    - action_listen
+* form: inform_arrival_airport_code{"toloc.airport_code": "icn"}
+    - slot{"toloc.airport_code": "icn"}
+    - flight_booking_form
+    - slot{"requested_slot": "time"}
+* form: inform_departure_date{"depart_date.month_name": "October", "depart_date.day_number": "5th", "time": "2020-10-05T00:00:00.000+00:00"}
+    - slot{"time": "2020-10-05T00:00:00.000+00:00"}
+    - form: flight_booking_form
+    - slot{"time": "2020-10-05T00:00:00.000+00:00"}
+    - slot{"depart_date": "2020-10-05"}
+    - slot{"requested_slot": "no_of_adults"}
+* form: inform_no_of_adults{"no_of_adults": "3", "number": 3}
+    - slot{"no_of_adults": "3"}
+    - form: flight_booking_form
+    - slot{"no_of_adults": 3}
+    - slot{"requested_slot": "child_passengers"}
+* form: deny
+    - form: flight_booking_form
+    - slot{"child_passengers": false}
+    - slot{"no_of_children": 0}
+    - slot{"requested_slot": "infant_passengers"}
+* form: deny
+    - form: flight_booking_form
+    - slot{"infant_passengers": false}
+    - slot{"no_of_infants": 0}
+    - slot{"requested_slot": "class_type"}
+    - utter_ask_class_type
+    - action_listen
+* form: inform_class_type{"class_type": "ANY_CLASS"}
+    - slot{"class_type": "ANY_CLASS"}
+    - flight_booking_form
+    - slot{"class_type": "ANY_CLASS"}
+    - slot{"requested_slot": "currency_code"}
+    - utter_ask_currency_code
+    - action_listen
+* form: inform_currency_code{"currency_code": "EUR"}
+    - slot{"currency_code": "EUR"}
+    - flight_booking_form
+    - slot{"currency_code": "EUR"}
+    - slot{"requested_slot": "round_trip"}
+    - utter_ask_round_trip
+    - action_listen
+* form: inform_round_trip{"round_trip": "one way"}
+    - slot{"round_trip": "one way"}
+    - flight_booking_form
+    - slot{"round_trip": "one way"}
+    - slot{"requested_slot": "flight_stop_check"}
+* form: deny
+    - form: flight_booking_form
+    - slot{"flight_stop_check": "false"}
+    - slot{"requested_slot": "email_id"}
+* form: inform_email_id{"email_id": "david@daveabraham.me"}
+    - slot{"email_id": "david@daveabraham.me"}
+    - form: flight_booking_form
+    - slot{"email_id": "david@daveabraham.me"}
+    - slot{"requested_slot": "title"}
+    - utter_ask_title
+    - action_listen
+* form: inform_title
+    - flight_booking_form
+    - slot{"title": "Mr."}
+    - slot{"requested_slot": "user_name"}
+* form: inform_user_name{"user_name": "David Murphy"}
+    - slot{"user_name": "David Murphy"}
+    - form: flight_booking_form
+    - slot{"user_name": "David Murphy"}
+    - slot{"requested_slot": "mobile_no"}
+* form: inform_mobile_no{"mobile_no": "9960349380", "number": 9960349380}
+    - slot{"mobile_no": "9960349380"}
+    - form: flight_booking_form
+    - slot{"mobile_no": "9960349380"}
+    - slot{"requested_slot": "country_code"}
+* form: inform_country_code{"number": 91}
+    - form: flight_booking_form
+    - slot{"country_code": 91}
+    - form{"name": null}
+    - slot{"requested_slot": null}
+* quote{"quote_id": "3"}
+    - slot{"quote_id": "3"}
+    - utter_booking
+* affirm
+    - action_booking_confirmation
+    - utter_confirm
+    - action_slot_reset
+    - reset_slots
+    - utter_goodbye

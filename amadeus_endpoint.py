@@ -342,7 +342,7 @@ class AmadeusFlight:
                                         "flight_no" : self.inbound_params["flight_number"],
                                         "flight_duration" : self.inbound_params["flight_duration"]
                                         }
-        print(email_params)
+        # print(email_params)
 
         return email_params
 
@@ -420,10 +420,10 @@ class AmadeusFlight:
             stops_str = ""
         return stops_str
 
-if __name__ == "__main__":
-    a = AmadeusFlight(originLocation="DXB", destinationLocation="AKL", departureDate="2020-10-05",
-                    adults=3, children=3, infants=2, travelClass="ANY_CLASS", currencyCode="EUR",
-                     title="Mr.", user_name="Arnold Schwarznegger",email_id="david@daveabraham.me",mobile_no=9850369780,country_code=91)
+# if __name__ == "__main__":
+#     a = AmadeusFlight(originLocation="DXB", destinationLocation="AKL", departureDate="2020-10-05",
+#                     adults=3, children=3, infants=2, travelClass="ANY_CLASS", currencyCode="EUR",
+#                      title="Mr.", user_name="Arnold Schwarznegger",email_id="david@daveabraham.me",mobile_no=9850369780,country_code=91)
 
     # gfp = iter(a.generate_flight_quotes())
     # LON - > ICN
@@ -435,8 +435,8 @@ if __name__ == "__main__":
     #     except StopIteration:
     #         break
 
-    pnr = a.insert_booking_details(1)
-    print(pnr)
+    # pnr = a.insert_booking_details(1)
+    # print(pnr)
 
     # a = AmadeusFlight(originLocation="Mumbai", destinationLocation="Sydney",
     #                   departureDate="2020-07-01", nonStop="false", adults=1, max=5)

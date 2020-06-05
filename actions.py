@@ -302,8 +302,8 @@ class FlightBookingForm(FormAction):
                ) -> List[Dict]:
         """Once required slots are filled, print buttons for found facilities"""
 
-        flight_source = str(tracker.get_slot("fromloc_city_name")).upper()
-        flight_destination = str(tracker.get_slot("toloc_city_name")).upper()
+        flight_source = str(tracker.get_slot("fromloc.airport_code")).upper()
+        flight_destination = str(tracker.get_slot("toloc.airport_code")).upper()
         departure_datetime = tracker.get_slot("time")
         departure_date = tracker.get_slot("depart_date")
         return_date = tracker.get_slot("return_date")
@@ -345,7 +345,7 @@ class FlightBookingForm(FormAction):
         if round_trip == "round trip":
             return_date = "Return date: "+tracker.get_slot("return_date")
         else:
-            return_date = ""
+            return_date = None
 
         out = "Checking information about available flights for the route {} --> {} on {} for {} {} {} in {} class. {}. The following flights are available: ".format(flight_source, flight_destination, str(departure_date)[:10], adults, children,
                                                                                                                                                                                       infants, class_type.title(), return_date)
@@ -353,7 +353,7 @@ class FlightBookingForm(FormAction):
 
         try:
             global a
-            a = AmadeusFlight(originLocation=flight_source, destinationLocation=flight_destination, departureDate=departure_date,returnDate = return_date,travelClass=class_type,adults=no_of_adults,children=no_of_children,infants=no_of_infants,currencyCode=currency_code,nonStop=flight_stop_check,title=title,user_name=user_name,email_id=email_id,mobile_no=mobile_no,country_code=country_code)
+            a = AmadeusFlight(originLocation=flight_source, destinationLocation=flight_destination, departureDate=departure_date,returnDate=return_date,travelClass=class_type,adults=no_of_adults,children=no_of_children,infants=no_of_infants,currencyCode=currency_code,nonStop=flight_stop_check,title=title,user_name=user_name,email_id=email_id,mobile_no=mobile_no,country_code=country_code)
         except Exception as e:
             pass
 

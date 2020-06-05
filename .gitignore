@@ -138,6 +138,7 @@ dmypy.json
 *20200430-185757.tar.gz
 *20200604-002204.tar.gz
 *20200531-195122.tar.gz
+*20200604-124024.tar.gz
 
 
 # config files
@@ -145,3 +146,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# results
+*results
