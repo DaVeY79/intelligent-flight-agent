@@ -1,6 +1,6 @@
 from amadeus import Client, ResponseError
 from datetime import datetime
-from iata_mapping import get_city_name, get_city_iata, get_airline_name
+from iata_mapping import get_city_name, get_city_iata, get_airline_name, get_airport_name
 import re
 import calendar
 import logging
@@ -49,8 +49,8 @@ class AmadeusFlight:
                  includedAirlineCodes=None, maxPrice=None, flightmod=None, flight_time=None, email_id=None, mobile_no=None, country_code=None,
                  title=None, user_name=None, currencyCode="INR", nonStop="false", max=5):
 
-        self.originLocationCode = get_city_iata(originLocation)
-        self.destinationLocationCode = get_city_iata(destinationLocation)
+        self.originLocationCode = originLocation
+        self.destinationLocationCode = destinationLocation
         self.departureDate = departureDate
         self.adults = adults
         self.children = children
@@ -104,8 +104,10 @@ class AmadeusFlight:
                 segment_fare_details = list(
                     filter(lambda x: x['travelerType'] == 'ADULT', data['travelerPricings']))[0]
                 baggage_allowance = segment_fare_details['fareDetailsBySegment'][-1]['includedCheckedBags']
-                baggage_allowance_str = str(baggage_allowance["weight"]) + \
-                    baggage_allowance["weightUnit"]
+                if baggage_allowance.get("weight"):
+                    baggage_allowance_str = str(baggage_allowance["weight"]) + baggage_allowance["weightUnit"]
+                else:
+                    baggage_allowance_str = "25kg"
                 stops_str = self.stops_format(itinerary["segments"])
                 departure = itinerary["segments"][0]["departure"]
                 departure_place = get_city_name(departure["iataCode"])
@@ -243,8 +245,8 @@ class AmadeusFlight:
             try:
                 query = insert(self.bookings, inline = False)
                 ResultProxy = connection.execute(query,values_list)
-            except:
-                connection.rollback()
+            except Exception as e:
+                print(e)
 
         return pnr
 
@@ -273,8 +275,16 @@ class AmadeusFlight:
         booking_params["arrive_date"], booking_params["arrive_time"] = arrival["at"].split("T")
         segment_fare_details = list(filter(lambda x: x['travelerType'] == 'ADULT', prices.get('flightOffers')[0].get('travelerPricings')))[0]
         baggage_allowance = segment_fare_details['fareDetailsBySegment'][-1]['includedCheckedBags']
-        booking_params["baggage_allowance_weight"] = int(baggage_allowance["weight"])
-        booking_params["baggage_allowance_unit"] = baggage_allowance["weightUnit"]
+        if baggage_allowance.get("weight"):
+            booking_params["baggage_allowance_weight"] = int(baggage_allowance.get("weight"))
+            booking_params["baggage_allowance_unit"] = baggage_allowance.get("weightUnit")
+        else:
+            booking_params["baggage_allowance_weight"] = 25
+            booking_params["baggage_allowance_unit"] = "kg"
+        if baggage_allowance.get("no_of_checkbags"):
+            booking_params["no_of_checkbags"] = baggage_allowance.get("quantity")
+        else:
+            booking_params["no_of_checkbags"] = 2
         booking_params["airline_iata"] = travel_leg["segments"][0]["carrierCode"]
         booking_params["flight_duration"] = self.duration_format(travel_leg["duration"]).replace(" Total duration: ","")
         booking_params["travel_class"] = self.travelClass
@@ -288,8 +298,9 @@ class AmadeusFlight:
         booking_params["form_of_payment_fee"] = float(list(filter(lambda x:x["type"] == "FORM_OF_PAYMENT", prices["flightOffers"][0]["price"]["fees"]))[0]["amount"])
         total_tax = 0.0
         for traveler in prices.get("flightOffers")[0].get("travelerPricings"):
-            for tax in traveler.get("price").get("taxes"):
-                total_tax += float(tax.get("amount"))
+            if traveler.get("price").get("taxes"):
+                for tax in traveler.get("price").get("taxes"):
+                    total_tax += float(tax.get("amount"))
         booking_params["fare_basis_code"] = prices.get("flightOffers")[0].get("travelerPricings")[0].get('fareDetailsBySegment')[0].get("fareBasis")
         booking_params["tax"] = total_tax
         booking_params["travel_bound"] = travel_bound
@@ -298,10 +309,11 @@ class AmadeusFlight:
         booking_params["country_code"] = self.country_code
         booking_params["title"] = self.title
         booking_params["user_name"] = self.user_name
+        # print(booking_params)
         return booking_params
 
     def get_email_params(self,booking_params, pnr):
-        email_params = {k:booking_params[k] for k in ["pnr","base_fare","supplier_fee","ticketing_fee","form_of_payment_fee","tax","email_id","mobile_no","country_code"]}
+        email_params = {k:booking_params[k] for k in ["pnr","base_fare","supplier_fee","ticketing_fee","form_of_payment_fee","tax","email_id","mobile_no","country_code","no_of_checkbags"]}
         email_params["airline_name"] = "<strong>"+amadeus.reference_data.airlines.get(airlineCodes=booking_params["airline_iata"]).data[0]["businessName"].title()+"</strong>"
         email_params["airline_iata"] = "<strong>"+booking_params["airline_iata"]+"</strong>"
         email_params["baggage_allowance"] = str(booking_params["baggage_allowance_weight"])+booking_params["baggage_allowance_unit"].lower()
@@ -309,7 +321,9 @@ class AmadeusFlight:
         email_params["total"] = booking_params["base_fare"]+booking_params["supplier_fee"]+booking_params["ticketing_fee"]+booking_params["form_of_payment_fee"]+booking_params["tax"]
         email_params["outbound"] = {
                                     "source_place" : get_city_name(self.outbound_params["source_iata"]),
+                                    "source_airport" : get_airport_name(self.outbound_params["source_iata"]),
                                     "destination_place" : get_city_name(self.outbound_params["destination_iata"]),
+                                    "destination_airport" : get_airport_name(self.outbound_params["destination_iata"]),
                                     "depart_date" : datetime.strptime(self.outbound_params["depart_date"],"%Y-%m-%d").strftime("%a, %d %b %Y"),
                                     "depart_time" : self.outbound_params["depart_time"][:5],
                                     "arrive_time" : self.outbound_params["arrive_time"][:5],
@@ -328,6 +342,7 @@ class AmadeusFlight:
                                         "flight_no" : self.inbound_params["flight_number"],
                                         "flight_duration" : self.inbound_params["flight_duration"]
                                         }
+        print(email_params)
 
         return email_params
 
@@ -406,42 +421,27 @@ class AmadeusFlight:
         return stops_str
 
 if __name__ == "__main__":
-    a = AmadeusFlight(originLocation="Bangalore", destinationLocation="Dubai", departureDate="2020-10-05",
-                    adults=3, children=3, infants=2, travelClass="ECONOMY", currencyCode="INR",
-                     title="Mr", user_name="David Abraham",email_id="david@daveabraham.me",mobile_no=9850369780,country_code=91)
+    a = AmadeusFlight(originLocation="DXB", destinationLocation="AKL", departureDate="2020-10-05",
+                    adults=3, children=3, infants=2, travelClass="ANY_CLASS", currencyCode="EUR",
+                     title="Mr.", user_name="Arnold Schwarznegger",email_id="david@daveabraham.me",mobile_no=9850369780,country_code=91)
 
-    gfp = iter(a.generate_flight_quotes())
+    # gfp = iter(a.generate_flight_quotes())
+    # LON - > ICN
+    # while True:
+    #     try:
+    #         output = next(gfp)
+    #         print(output)
+    #         print("\n\n")
+    #     except StopIteration:
+    #         break
 
-    while True:
-        try:
-            output = next(gfp)
-            print(output)
-            print("\n\n")
-        except StopIteration:
-            break
+    pnr = a.insert_booking_details(1)
+    print(pnr)
 
-    # pnr = a.insert_booking_details(1)
-    # print(pnr)
-
-# gfp = iter(a.generate_flight_quotes())
-#
-# while True:
-#     try:
-#         output = next(gfp)
-#         print(output)
-#         print("\n\n")
-#     except StopIteration:
-#         break
-
-
-
-
-
-
-# a = AmadeusFlight(originLocation="Mumbai", destinationLocation="Sydney",
-#                   departureDate="2020-07-01", nonStop="false", adults=1, max=5)
-# gfp_ = iter(a.generate_flight_quotes())
-#
-# for output in gfp_:
-#     print(output)
-#     print("\n")
+    # a = AmadeusFlight(originLocation="Mumbai", destinationLocation="Sydney",
+    #                   departureDate="2020-07-01", nonStop="false", adults=1, max=5)
+    # gfp_ = iter(a.generate_flight_quotes())
+    #
+    # for output in gfp_:
+    #     print(output)
+    #     print("\n")

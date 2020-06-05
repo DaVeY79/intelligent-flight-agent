@@ -22,6 +22,12 @@ def get_airport_city(airport_name):
     city_name = cityiata_df[cityiata_df["Name"] == closest_airport]["City"].values[0]
     return city_name
 
+def get_airport_name(airport_iata):
+    airport_iatas = list(cityiata_df.IATA.values)
+    closest_airport_iata = process.extractOne(airport_iata,airport_iatas)[0]
+    airport_name = cityiata_df[cityiata_df["IATA"] == closest_airport_iata]["Name"].values[0]
+    return airport_name
+
 def get_airline_iata(airline_name):
     airlines = list(airlineiata_df.Name.values)
     closest_airline = process.extractOne(airline_name,airlines)[0]

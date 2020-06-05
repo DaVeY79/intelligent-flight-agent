@@ -70,7 +70,7 @@ class ActionAskFromAirport(Action):
         if len(list(get_city_iatas(city_name))) > 1:
             buttons = []
             for city_airport_name,city,city_iata in get_city_iatas(city_name):
-                buttons.append({"title":"{},{} ({})".format(city_airport_name,city,city_iata),"payload":"/flight{\"fromloc.airport_code\":\""+str(city_iata).lower()+"\"}"})
+                buttons.append({"title":"I want a flight from {}, {}".format(city_airport_name,city_iata),"payload":"/inform_departure_airport_code{\"fromloc.airport_code\":\""+str(city_iata).lower()+"\"}"})
 
             out = "Please select the airport for {}: ".format(city_name)
             dispatcher.utter_message(text=out,buttons=buttons)
@@ -95,7 +95,7 @@ class ActionAskToAirport(Action):
         if len(list(get_city_iatas(city_name))) > 1:
             buttons = []
             for city_airport_name,city,city_iata in get_city_iatas(city_name):
-                buttons.append({"title":"{},{} ({})".format(city_airport_name,city,city_iata),"payload":"/flight{\"toloc.airport_code\":\""+str(city_iata).lower()+"\"}"})
+                buttons.append({"title":"I want a flight to {}, {}".format(city_airport_name,city_iata),"payload":"/inform_arrival_airport_code{\"toloc.airport_code\":\""+str(city_iata).lower()+"\"}"})
 
             out = "Please select the airport for {}: ".format(city_name)
 
@@ -235,11 +235,11 @@ class FlightBookingForm(FormAction):
                                                     intent=["flight",
                                                             "inform_arrival_city"]),
 
-                # "fromloc.airport_code": self.from_entity(entity="fromloc.airport_code",
-                #                                               intent=["flight"]),
-                #
-                # "toloc.airport_code": self.from_entity(entity="toloc.airport_code",
-                #                                              intent=["flight"]),
+                "fromloc.airport_code": [self.from_entity(entity="fromloc.airport_code",intent="inform_departure_airport_code"),
+                                         self.from_text(intent="inform_departure_airport_code")],
+
+                "toloc.airport_code": [self.from_entity(entity="fromloc.airport_code",intent="inform_arrival_airport_code"),
+                                       self.from_text(intent="inform_arrival_airport_code")],
 
                 "depart_date": self.from_entity(entity="time",
                                                 intent=["flight",
@@ -282,9 +282,7 @@ class FlightBookingForm(FormAction):
                 "email_id": self.from_entity(entity="email_id",
                                                   intent=["inform_email_id"]),
 
-                "title": [self.from_entity(entity="title",
-                                                  intent=["inform_title"]),
-                         self.from_text(intent="inform_title")],
+                "title": self.from_text(intent=None),
 
                 "user_name": self.from_entity(entity="user_name",
                                                   intent=["inform_user_name"]),
@@ -304,8 +302,8 @@ class FlightBookingForm(FormAction):
                ) -> List[Dict]:
         """Once required slots are filled, print buttons for found facilities"""
 
-        flight_source = tracker.get_slot("fromloc_city_name")
-        flight_destination = tracker.get_slot("toloc_city_name")
+        flight_source = str(tracker.get_slot("fromloc_city_name")).upper()
+        flight_destination = str(tracker.get_slot("toloc_city_name")).upper()
         departure_datetime = tracker.get_slot("time")
         departure_date = tracker.get_slot("depart_date")
         return_date = tracker.get_slot("return_date")
@@ -373,13 +371,11 @@ class FlightBookingForm(FormAction):
                     break
 
         if len(buttons) == 0:
-            dispatcher.utter_message("No flights for that route")
+            dispatcher.utter_message(template="utter_no_flights_available")
             dispatcher.utter_message(template="utter_other_help")
 
         else:
             dispatcher.utter_message(text=out,buttons=buttons)
-            # return []
-
         return []
 
 
@@ -539,21 +535,30 @@ class FlightBookingForm(FormAction):
                       ) -> Dict[Text, Any]:
         """Validate departure date."""
 
-        if value == "Mr":
-            SlotSet("title", "Mr")
-            return {"title": "Mr"}
+        if value:
+            SlotSet("title", value)
+            return {"title": value}
 
-        elif value == "Ms":
-            SlotSet("title", "Ms")
-            return {"title": "Ms"}
+        else:
+            SlotSet("title", None)
+            return {"title": None}
 
-        elif value == "Mx":
-            SlotSet("title", "Mx")
-            return {"title": "Mx"}
 
-        elif value == "Dr":
-            SlotSet("title", "Dr")
-            return {"title": "Dr"}
+        # if value == "Mr":
+        #     SlotSet("title", "Mr")
+        #     return {"title": "Mr"}
+        #
+        # elif value == "Ms":
+        #     SlotSet("title", "Ms")
+        #     return {"title": "Ms"}
+        #
+        # elif value == "Mx":
+        #     SlotSet("title", "Mx")
+        #     return {"title": "Mx"}
+        #
+        # elif value == "Dr":
+        #     SlotSet("title", "Dr")
+        #     return {"title": "Dr"}
 
     # def validate_fromloc_city_name(self,
     #                   value: Text,
@@ -600,33 +605,31 @@ class FlightBookingForm(FormAction):
     #         SlotSet("toloc.airport_code", None)
     #         return {"toloc_city_name": None}
 
-    # def request_next_slot(
-    #     self,
-    #     dispatcher: "CollectingDispatcher",
-    #     tracker: "Tracker",
-    #     domain: Dict[Text, Any],
-    # ) -> Optional[List[EventType]]:
-    #     """Request the next slot and utter template if needed,
-    #         else return None"""
-    #
-    #     for slot in self.required_slots(tracker):
-    #         if self._should_request_slot(tracker, slot):
-    #             if tracker.get_slot("fromloc_city_name") and not(tracker.get_slot("fromloc.airport_code")):
-    #                 dispatcher.utter_message(text="Did you mean..")
-    #                 return [FollowupAction("action_ask_from_airport")]
-    #                 # tracker.trigger_follow_up_action(self.ActionAskFromAirport)
-    #
-    #             elif tracker.get_slot("toloc_city_name") and not(tracker.get_slot("toloc.airport_code")):
-    #                 dispatcher.utter_message(text="Did you mean..")
-    #                 return [FollowupAction("action_ask_to_airport")]
-    #                 # tracker.trigger_follow_up_action(self.ActionAskToAirport)
-    #
-    #             logger.debug(f"Request next slot '{slot}'")
-    #             dispatcher.utter_message(template=f"utter_ask_{slot}", **tracker.slots)
-    #             return [SlotSet(REQUESTED_SLOT, slot)]
-    #
-    #     # no more required slots to fill
-    #     return None
+    def request_next_slot(
+        self,
+        dispatcher: "CollectingDispatcher",
+        tracker: "Tracker",
+        domain: Dict[Text, Any],
+    ) -> Optional[List[EventType]]:
+        """Request the next slot and utter template if needed,
+            else return None"""
+
+        for slot in self.required_slots(tracker):
+            if self._should_request_slot(tracker, slot):
+                if tracker.get_slot("fromloc_city_name") and not(tracker.get_slot("fromloc.airport_code")):
+                    # dispatcher.utter_message(text="Did you mean..")
+                    return [FollowupAction("action_ask_from_airport")]
+
+                elif tracker.get_slot("toloc_city_name") and not(tracker.get_slot("toloc.airport_code")):
+                    # dispatcher.utter_message(text="Did you mean..")
+                    return [FollowupAction("action_ask_to_airport")]
+
+                logger.debug(f"Request next slot '{slot}'")
+                dispatcher.utter_message(template=f"utter_ask_{slot}", **tracker.slots)
+                return [SlotSet(REQUESTED_SLOT, slot)]
+
+        # no more required slots to fill
+        return None
 
     def validate_time(self,
                       value: Text,
@@ -818,7 +821,8 @@ class FlightTimeForm(FormAction):
                     break
 
         if len(buttons) == 0:
-            dispatcher.utter_message("No flights available for that route")
+            dispatcher.utter_message(template="utter_no_flights_available")
+            dispatcher.utter_message(template="utter_other_help")
         else:
             dispatcher.utter_message(text=out,buttons=buttons)
 
