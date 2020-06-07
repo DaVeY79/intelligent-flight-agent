@@ -268,7 +268,6 @@ slots:
 
 forms:
   - flight_booking_form
-  - flight_time_form
   - retrieve_booking_info_form
 
 actions:

@@ -426,7 +426,6 @@ class AmadeusFlight:
 #                      title="Mr.", user_name="Arnold Schwarznegger",email_id="david@daveabraham.me",mobile_no=9850369780,country_code=91)
 
     # gfp = iter(a.generate_flight_quotes())
-    # LON - > ICN
     # while True:
     #     try:
     #         output = next(gfp)

@@ -92,11 +92,15 @@ class RetrieveBookingInformation:
                 title = user_name = email_id = country_code = mobile_no = None
 
             elif len(results) ==  1:
+                out = ""
                 [pnr, title, user_name, booking_date, source_iata, source_terminal, destination_iata, destination_terminal, depart_date, depart_time, arrive_date, arrive_time, stops, flight_duration, no_of_stops, flight_number,
                 adult_paxno, child_paxno, infant_paxno, travel_class, currency, airline_iata, aircraft_type, baggage_allowance_weight, baggage_allowance_unit, email_id, country_code, mobile_no, no_of_checkbags, fare_basis_code,
                 base_fare, supplier, ticketing_fee, form_of_payment_fee, tax, grand_total, travel_bound] = results[0]
-                stops = json.loads(stops)
-                stops_str = self.stops_format(stops["segments"])
+                if stops:
+                    stops = json.loads(stops)
+                    stops_str = self.stops_format(stops["segments"])
+                else:
+                    stops_str = ""
                 source_terminal = self.terminal_format(source_terminal)
                 destination_terminal = self.terminal_format(destination_terminal)
                 outbound_params = ["Outbound", get_airline_name(airline_iata), get_city_name(source_iata), source_terminal, self.date_format(depart_date),
@@ -121,8 +125,11 @@ class RetrieveBookingInformation:
                 [pnr, title, user_name, booking_date, source_iata, source_terminal, destination_iata, destination_terminal, depart_date, depart_time, arrive_date, arrive_time, stops, flight_duration, no_of_stops, flight_number,
                 adult_paxno, child_paxno, infant_paxno, travel_class, currency, airline_iata, aircraft_type, baggage_allowance_weight, baggage_allowance_unit, email_id, country_code, mobile_no, no_of_checkbags, fare_basis_code,
                 base_fare, supplier, ticketing_fee, form_of_payment_fee, tax, grand_total, travel_bound] = results[1]
-                stops = json.loads(stops)
-                stops_str = self.stops_format(stops["segments"])
+                if stops:
+                    stops = json.loads(stops)
+                    stops_str = self.stops_format(stops["segments"])
+                else:
+                    stops_str = ""
                 source_terminal = self.terminal_format(source_terminal)
                 destination_terminal = self.terminal_format(destination_terminal)
                 outbound_params = [flight_number,get_city_name(source_iata), source_terminal, self.date_format(depart_date),
@@ -134,9 +141,11 @@ class RetrieveBookingInformation:
                 out += "{} Flight {}. Departure from {}{} on {} at {} --->  Arrival in {}{} on {} at {}. {}. {}\n".format("Outbound: ",*outbound_params)
                 out += "{} Flight {}. Departure from {}{} on {} at {} --->  Arrival in {}{} on {} at {}. {}. {}".format("Inbound: ",*inbound_params)
 
-            return out, title, user_name, email_id, country_code, mobile_no
+        return out, title, user_name, email_id, country_code, mobile_no
 
-if __name__ == "__main__":
-    r = RetrieveBookingInformation('PNRac7a')
-    out, title, user_name, email_id, country_code, mobile_no = r.get_booking_details()
-    print(out)
+
+
+# if __name__ == "__main__":
+#     r = RetrieveBookingInformation('PNR6665')
+#     out, title, user_name, email_id, country_code, mobile_no = r.get_booking_details()
+#     print(out)
