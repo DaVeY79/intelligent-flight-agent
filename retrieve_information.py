@@ -107,7 +107,7 @@ class RetrieveBookingInformation:
                                        self.time_format(depart_time), get_city_name(destination_iata), destination_terminal, self.date_format(arrive_date), self.time_format(arrive_time), " Total duration: "+flight_duration, stops_str]
 
                 passenger_details = self.passengers_details_format(adult_paxno,child_paxno, infant_paxno)
-                out += "Welcome back {}. {}. Your booking reference is {}. You booked your flight on {}. Total fare paid: {}. Fare basis code: {}. Baggage allowance: {}. Your email address is {} and mobile number is {}. No of passengers travelling: {}.\n\n".format(title, user_name.strip(), pnr[:-2],get_airline_name(airline_iata),currency_code_mapping.get(currency)[1]+str(grand_total),fare_basis_code,str(baggage_allowance_weight)+baggage_allowance_unit, email_id, "+"+str(country_code)+str(mobile_no), passenger_details)
+                out += "Welcome back {} {}. Your booking reference is {}. You booked your flight on {}. Total fare paid: {}. Fare basis code: {}. Baggage allowance: {}. Your email address is {} and mobile number is {}. No of passengers travelling: {}.\n\n".format(title, user_name.strip(), pnr[:-2],get_airline_name(airline_iata),currency_code_mapping.get(currency)[1]+str(grand_total),fare_basis_code,str(baggage_allowance_weight)+baggage_allowance_unit, email_id, "+"+str(country_code)+str(mobile_no), passenger_details)
                 out += "{} {} Departure from {}{} on {} at {} --->  Arrival in {}{} on {} at {}. {}. {}\n".format("Outbound: ",*outbound_params)
 
             else:
@@ -137,7 +137,7 @@ class RetrieveBookingInformation:
 
                 passenger_details = self.passengers_details_format(adult_paxno,child_paxno, infant_paxno)
 
-                out += "Welcome back {}. {}. Your booking reference is {}. You booked your flight on {}. Total fare paid: {}. Fare basis code: {}. Baggage allowance: {}. Your email address is {} and mobile number is {}. No of passengers travelling: {}.\n\n".format(title, user_name.strip(), pnr[:-2],get_airline_name(airline_iata),currency_code_mapping.get(currency)[1]+str(grand_total),fare_basis_code,str(baggage_allowance_weight)+baggage_allowance_unit, email_id, "+"+str(country_code)+str(mobile_no), passenger_details)
+                out += "Welcome back {} {}. Your booking reference is {}. You booked your flight on {}. Total fare paid: {}. Fare basis code: {}. Baggage allowance: {}. Your email address is {} and mobile number is {}. No of passengers travelling: {}.\n\n".format(title, user_name.strip(), pnr[:-2],get_airline_name(airline_iata),currency_code_mapping.get(currency)[1]+str(grand_total),fare_basis_code,str(baggage_allowance_weight)+baggage_allowance_unit, email_id, "+"+str(country_code)+str(mobile_no), passenger_details)
                 out += "{} Flight {}. Departure from {}{} on {} at {} --->  Arrival in {}{} on {} at {}. {}. {}\n".format("Outbound: ",*outbound_params)
                 out += "{} Flight {}. Departure from {}{} on {} at {} --->  Arrival in {}{} on {} at {}. {}. {}".format("Inbound: ",*inbound_params)
 
