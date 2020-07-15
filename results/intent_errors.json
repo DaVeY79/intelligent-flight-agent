@@ -1,0 +1,178 @@
+[
+  {
+    "text": "show fares and flights from denver to oakland",
+    "intent": "airfare",
+    "intent_prediction": {
+      "name": "flight+airfare",
+      "confidence": 0.4952237606048584
+    }
+  },
+  {
+    "text": "hey",
+    "intent": "greet",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.9548031687736511
+    }
+  },
+  {
+    "text": "hello",
+    "intent": "greet",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.9747537970542908
+    }
+  },
+  {
+    "text": "hi",
+    "intent": "greet",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.9591913819313049
+    }
+  },
+  {
+    "text": "good morning",
+    "intent": "greet",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.9859774112701416
+    }
+  },
+  {
+    "text": "good evening",
+    "intent": "greet",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.98874431848526
+    }
+  },
+  {
+    "text": "hey there",
+    "intent": "greet",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.79425448179245
+    }
+  },
+  {
+    "text": "bye",
+    "intent": "goodbye",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.9325736165046692
+    }
+  },
+  {
+    "text": "goodbye",
+    "intent": "goodbye",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.9694679975509644
+    }
+  },
+  {
+    "text": "see you around",
+    "intent": "goodbye",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.712458074092865
+    }
+  },
+  {
+    "text": "see you later",
+    "intent": "goodbye",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.9714168906211853
+    }
+  },
+  {
+    "text": "yes",
+    "intent": "affirm",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.8742614388465881
+    }
+  },
+  {
+    "text": "indeed",
+    "intent": "affirm",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.8835145235061646
+    }
+  },
+  {
+    "text": "of course",
+    "intent": "affirm",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.6383582949638367
+    }
+  },
+  {
+    "text": "that sounds good",
+    "intent": "affirm",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.9829345941543579
+    }
+  },
+  {
+    "text": "correct",
+    "intent": "affirm",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.8799565434455872
+    }
+  },
+  {
+    "text": "no",
+    "intent": "deny",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.9674237370491028
+    }
+  },
+  {
+    "text": "never",
+    "intent": "deny",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.6748795509338379
+    }
+  },
+  {
+    "text": "I don't think so",
+    "intent": "deny",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.9713937044143677
+    }
+  },
+  {
+    "text": "don't like that",
+    "intent": "deny",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.984367311000824
+    }
+  },
+  {
+    "text": "no way",
+    "intent": "deny",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.9837260246276855
+    }
+  },
+  {
+    "text": "not really",
+    "intent": "deny",
+    "intent_prediction": {
+      "name": "flight",
+      "confidence": 0.9079874157905579
+    }
+  }
+]

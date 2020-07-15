@@ -125,5 +125,27 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
+# model files
+*20200428-205702.tar.gz
+*20200504-131711.tar.gz
+*20200516-201325.tar.gz
+*20200530-011229.tar.gz
+*20200602-030007.tar.gz
+*20200602-035445.tar.gz
+*20200602-135455.tar.gz
+*20200603-134646.tar.gz
+*20200603-232059.tar.gz
+*20200430-185757.tar.gz
+*20200604-002204.tar.gz
+*20200531-195122.tar.gz
+*20200604-124024.tar.gz
+
+
+# config files
+*.ini
+
 # Pyre type checker
 .pyre/
+
+# results
+*results

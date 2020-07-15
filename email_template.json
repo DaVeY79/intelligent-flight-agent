@@ -1,0 +1,37 @@
+{
+  "pnr":"PNR9042IB",
+  "baggage_allowance":"25kg",
+  "passenger_name": "Mr. David Abraham",
+  "airline_name": "Indigo",
+  "airline_iata": "6E",
+  "outbound": {
+    "source_place": "Bangalore",
+    "destination_place": "Pune",
+    "depart_date": "Wed, 10 May 2017",
+    "depart_time": "00:10",
+    "arrive_time": "01:35",
+    "flight_duration": "1h 25m",
+    "no_of_stops": 0,
+    "flight_no": 682
+  },
+  "inbound": {
+    "source_place": "Pune",
+    "destination_place": "Bangalore",
+    "depart_date": "Sat, 17 Jun 2017",
+    "depart_time": "23:45",
+    "arrive_time": "01:15",
+    "flight_duration": "1h 30m",
+    "no_of_stops": 0,
+    "flight_no": 807
+  },
+  "base_fare": 650.0,
+  "supplier_fee": 0.0,
+  "ticketing_fee": 0.0,
+  "form_of_payment_fee": 0.0,
+  "tax": 0.0,
+  "total": 1098.4,
+  "email_id":"david@daveabraham.me",
+  "mobile_no":9850369780,
+  "country_code":91,
+  "baggage_allowance":"25kg"
+}
